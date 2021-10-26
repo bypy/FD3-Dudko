@@ -8,6 +8,10 @@
     text-transform: uppercase;
 }
 
+.ishop th {
+    padding: 0.125em 0.625em;
+}
+
 .ishop tr {
     border: 1px solid darkslategray;
 }
@@ -19,7 +23,11 @@
 }
 
 
-@media screen and (max-width: 48em) {
+@media screen and (max-width: 50em) {
+    .ishop th {
+        padding: 0.125em;
+    }
+
     .ishop tr {
         word-break: break-word;
     }
