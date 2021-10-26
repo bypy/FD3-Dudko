@@ -2,7 +2,7 @@ const IShopComponent = React.createClass({
 
     displayName: "IShopComponent",
 
-    getDefaultProps: function () {
+    getDefaultProps: () => {
         return {title: "Интернет-магазин"}
     },
 
