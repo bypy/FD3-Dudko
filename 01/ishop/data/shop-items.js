@@ -1,11 +1,11 @@
 let lab01_data;
 (function o() {
     lab01_data = {
-        headline: ["ID", "Название", "Цена", "URL", "Количество"],
+        headline: ["Название", "Цена", "Валюта", "URL", "Количество", "Примечание"],
         records: [
             {
                 id: 1,
-                name: "Антивирусное ПО &laquo;NOD32&raquo;",
+                name: "Антивирусное ПО \"NOD32\"",
                 price: 65.30,
                 currency: "BYN",
                 url: "https://nod32.by/local/templates/nod32.by/build/img/content/home/ena.png",
@@ -14,7 +14,7 @@ let lab01_data;
             },
             {
                 id: 2,
-                name: "Антивирусное ПО &laquo;Dr. Web&raquo;",
+                name: "Антивирусное ПО \"Dr. Web\"",
                 price: 75.20,
                 currency: "BYN",
                 url: "https://st.drweb.com/static/new-www/files/2014/2years/box_ss.jpg",
@@ -23,7 +23,7 @@ let lab01_data;
             },
             {
                 id: 3,
-                name: "Антивирусное ПО &laquo;Panda&raquo; Essential",
+                name: "Антивирусное ПО \"Panda Essential\"",
                 price: 1188,
                 currency: "RUR",
                 url: "https://www.cloudav.ru/bitrix/templates/panda_new_home/panda_files/img/dome_essential.png",
@@ -32,7 +32,7 @@ let lab01_data;
             },
             {
                 id: 4,
-                name: "Антивирусное ПО &laquo;KasperskyInternet Security&raquo;",
+                name: "Антивирусное ПО \"KasperskyInternet Security\"",
                 price: 1526,
                 currency: "RUR",
                 url: "https://atmosoft.ru/img/kaspersky2.png",

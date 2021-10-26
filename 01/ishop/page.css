@@ -1,3 +1,5 @@
+@import url('../../fonts/RobotoCondensed-Regular.ttf');
+
 body {
     margin: 0;
     padding: 0;
@@ -16,9 +18,9 @@ html, body {
 }
 
 .container {
-    width: 80%;
-    max-width: 60em;
-    flex-basis: 50vh;
-    background-color: aqua;
+    width: auto;
+    max-width: 90%;
+    background-color: #e3eee4;
     padding: 1rem;
+    font-family: 'Roboto Condensed', sans-serif;
 }

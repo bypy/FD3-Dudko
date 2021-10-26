@@ -9,24 +9,25 @@
     <title>iSHOP</title>
 </head>
 <body>
-    <div id="root"></div>
-    <script src="https://unpkg.com/react@15/dist/react.js"></script>
-    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
-    <script src="components/IShopComponent.js"></script>
-    <script src="data/shop-items.js"></script>
+<div id="root"></div>
+<script src="https://unpkg.com/react@15/dist/react.js"></script>
+<script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+<script src="components/IShopComponent.js"></script>
+<link rel="stylesheet" href="components/IShopComponent.css"/>
+<script src="data/shop-items.js"></script>
 
-    <script>
-        ReactDOM.render(
-            React.DOM.div(
-                {className: "container"},
-                React.createElement(IShopComponent, {
-                    headline: lab01_data.headline,
-                    records: lab01_data.records
-                })
-            ),
-            document.getElementById("root")
-        );
-    </script>
+<script>
+    ReactDOM.render(
+        React.DOM.div(
+            {className: "container"},
+            React.createElement(IShopComponent, {
+                headline: lab01_data.headline,
+                records: lab01_data.records
+            })
+        ),
+        document.getElementById("root")
+    );
+</script>
 
 </body>
 </html>

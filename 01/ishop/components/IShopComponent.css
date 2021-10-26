@@ -1,0 +1,31 @@
+.ishop {
+    border-collapse: separate;
+    border: 2px solid darkslategray;
+}
+
+.ishop caption {
+    padding-bottom: 0.5em;
+    text-transform: uppercase;
+}
+
+.ishop tr {
+    border: 1px solid darkslategray;
+}
+
+.ishop td {
+    border: 1px solid darkslategray;
+    padding: 0.32em;
+    background-color: #d7e1d6;
+}
+
+
+@media screen and (max-width: 48em) {
+    .ishop tr {
+        word-break: break-word;
+    }
+
+    .ishop td:nth-child(2),
+    .ishop td:nth-child(3) {
+        word-break: initial;
+    }
+}
