@@ -1,0 +1,106 @@
+.ishop {
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+.ishop {
+    display: flex;
+    flex-flow: column nowrap;
+    align-content: stretch;
+    border: 2px solid darkslategray;
+}
+
+.ishop .caption {
+    flex: 0 0 3em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: blanchedalmond;
+}
+
+.ishop .row-header,
+.ishop .row-body {
+    display: flex;
+    flex-flow: row nowrap;
+    border-top: 1px solid black;
+}
+
+.ishop .row-header {
+    text-align: center;
+    background-color: blanchedalmond;
+}
+
+.ishop .row-header > * {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.ishop .row-body {
+    background-color: cornsilk;
+}
+
+.ishop .row-header > *,
+.ishop .row-body > * {
+    padding: 0.25em 0.5em;
+    word-wrap: break-word;
+    /* fallback */
+    overflow-x: auto;
+    /* if this fails */
+    word-break: break-all;
+}
+
+.ishop .row-header > *:not(:last-child),
+.ishop .row-body > *:not(:last-child) {
+    border-right: 1px solid black;
+}
+
+.ishop .row-body:last-child > * {
+    padding-bottom: 0.5em;
+}
+
+.ishop .row-header div:nth-child(1),
+.ishop .row-header div:nth-child(4),
+.ishop .row-body div:nth-child(1),
+.ishop .row-body div:nth-child(4) {
+    flex: 0 0 25%;
+}
+
+.ishop .row-header div:nth-child(2),
+.ishop .row-body div:nth-child(2) {
+    flex: 0 0 10%;
+}
+
+.ishop .row-header div:nth-child(3),
+.ishop .row-body div:nth-child(3) {
+    flex: 0 0 10%;
+}
+
+.ishop .row-header div:nth-child(5),
+.ishop .row-body div:nth-child(5) {
+    flex: 0 0 10%;
+}
+
+.ishop .row-header div:nth-child(6),
+.ishop .row-body div:nth-child(6) {
+    flex: 0 1 auto;
+}
+
+.ishop th {
+    padding: 0.125em 0.625em;
+}
+
+.ishop tr {
+    border: 1px solid darkslategray;
+}
+
+.ishop td {
+    border: 1px solid darkslategray;
+    padding: 0.32em;
+    background-color: #d7e1d6;
+}
