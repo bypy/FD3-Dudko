@@ -7,7 +7,7 @@ let lab01_data;
             {
                 id: 1,
                 name: "Антивирусное ПО \"NOD32\"",
-                price: 65.3000001,
+                price: 65.30,
                 currency: "BYN",
                 url: "https://nod32.by/local/templates/nod32.by/build/img/content/home/ena.png",
                 quantity: 8,
