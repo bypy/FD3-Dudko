@@ -1,22 +1,22 @@
-.ishop {
+.IShop {
     border-collapse: separate;
     border: 2px solid darkslategray;
 }
 
-.ishop caption {
+.IShop caption {
     padding-bottom: 0.5em;
     text-transform: uppercase;
 }
 
-.ishop th {
+.IShop th {
     padding: 0.125em 0.625em;
 }
 
-.ishop tr {
+.IShop tr {
     border: 1px solid darkslategray;
 }
 
-.ishop td {
+.IShop td {
     border: 1px solid darkslategray;
     padding: 0.32em;
     background-color: #d7e1d6;
@@ -24,16 +24,16 @@
 
 
 @media screen and (max-width: 50em) {
-    .ishop th {
+    .IShop th {
         padding: 0.125em;
     }
 
-    .ishop tr {
+    .IShop tr {
         word-break: break-word;
     }
 
-    .ishop td:nth-child(2),
-    .ishop td:nth-child(3) {
+    .IShop td:nth-child(2),
+    .IShop td:nth-child(3) {
         word-break: initial;
     }
 }

@@ -1,6 +1,6 @@
 const IShopComponent = React.createClass({
 
-    displayName: "IShopComponent",
+    displayName: "IShop",
 
     getDefaultProps: () => {
         return {orientation: "landscape"}
@@ -8,7 +8,7 @@ const IShopComponent = React.createClass({
 
 
     getHeader: (shopCardProperties) => {
-        return React.DOM.div({className: "row-header"},
+        return React.DOM.div({className: "item-properties"},
             shopCardProperties.map((property, index) => React.DOM.div(
                 {key: index},
                 property)
@@ -17,20 +17,19 @@ const IShopComponent = React.createClass({
     },
 
     getRecords: (shopCardRecords) => {
-        return shopCardRecords.map(cardRecord => {
-            return React.DOM.div({key: cardRecord.id, className: "row-body"},
-                React.DOM.div(null, cardRecord.name),
-                React.DOM.div(null, cardRecord.price),
-                React.DOM.div(null, cardRecord.currency),
-                React.DOM.div(null, cardRecord.url),
-                React.DOM.div(null, cardRecord.quantity),
-                React.DOM.div(null, cardRecord.details),
-            )
-        });
+        return shopCardRecords.map(cardRecord => React.createElement(IShopItemComponent, {
+            key: cardRecord.id,
+            name: cardRecord.name,
+            price: cardRecord.price,
+            currency: cardRecord.currency,
+            url: cardRecord.url,
+            quantity: cardRecord.quantity,
+            details: cardRecord.details,
+        }))
     },
 
     render: function () {
-        return React.DOM.div({className: "ishop"},
+        return React.DOM.div({className: "IShop"},
             React.DOM.div({className: "caption"}, this.props.caption),
             this.getHeader(this.props.headline),
             this.getRecords(this.props.records)
