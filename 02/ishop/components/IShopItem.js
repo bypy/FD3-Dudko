@@ -1,4 +1,4 @@
-const IShopItemComponent = React.createClass({
+const IShopItem = React.createClass({
     displayName: "IShopItem",
 
     propTypes: {

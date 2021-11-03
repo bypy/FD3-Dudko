@@ -7,23 +7,23 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="page.css">
-    <link rel="stylesheet" href="components/IShopComponent.css"/>
-    <link rel="stylesheet" href="components/IShopItemComponent.css"/>
+    <link rel="stylesheet" href="components/IShop.css"/>
+    <link rel="stylesheet" href="components/IShopItem.css"/>
     <title>iSHOP</title>
 </head>
 <body>
 <div id="root"></div>
 <script src="https://unpkg.com/react@15/dist/react.js"></script>
 <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
-<script src="components/IShopComponent.js"></script>
-<script src="components/IShopItemComponent.js"></script>
+<script src="components/IShop.js"></script>
+<script src="components/IShopItem.js"></script>
 <script src="data/shop-items.js"></script>
 
 <script>
     ReactDOM.render(
         React.DOM.div(
             {className: "container"},
-            React.createElement(IShopComponent, {
+            React.createElement(IShop, {
                 caption: lab01_data.caption,
                 headline: lab01_data.headline,
                 records: lab01_data.records

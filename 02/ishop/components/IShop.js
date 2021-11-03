@@ -1,11 +1,6 @@
-const IShopComponent = React.createClass({
+const IShop = React.createClass({
 
     displayName: "IShop",
-
-    getDefaultProps: () => {
-        return {orientation: "landscape"}
-    },
-
 
     getHeader: (shopCardProperties) => {
         return React.DOM.div({className: "item-properties"},
@@ -17,7 +12,7 @@ const IShopComponent = React.createClass({
     },
 
     getRecords: (shopCardRecords) => {
-        return shopCardRecords.map(cardRecord => React.createElement(IShopItemComponent, {
+        return shopCardRecords.map(cardRecord => React.createElement(IShopItem, {
             key: cardRecord.id,
             name: cardRecord.name,
             price: cardRecord.price,
