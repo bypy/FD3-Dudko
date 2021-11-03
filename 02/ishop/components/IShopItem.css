@@ -15,6 +15,10 @@
     justify-content: center;
 }
 
+.IShopItem.selected {
+    background-color: indianred;
+}
+
 .IShopItem > div:not(:last-child) {
     border-right: 1px solid black;
 }
