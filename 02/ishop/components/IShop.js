@@ -22,8 +22,8 @@ const IShop = React.createClass({
         );
     },
 
-    getRecords: (shopCardRecords, selectedItem, focusChangeCb, lostFocusCb, recordDeleteCb) => {
-        return shopCardRecords.map(cardRecord => React.createElement(IShopItem, {
+    getRecords: function () {
+        return this.state.activeRecords.map(cardRecord => React.createElement(IShopItem, {
             key: cardRecord.id,
             id: cardRecord.id,
             name: cardRecord.name,
@@ -32,10 +32,11 @@ const IShop = React.createClass({
             url: cardRecord.url,
             quantity: cardRecord.quantity,
             details: cardRecord.details,
-            focus: selectedItem,
-            onFocusChangeCb: focusChangeCb,
-            onLostFocusCb: lostFocusCb,
-            onRecordDeleteCb: recordDeleteCb,
+            focus: this.state.selectedRecord,
+            onFocusChangeCb: this.focusChangeCb,
+            onLostFocusCb: this.lostFocusCb,
+            onRecordDeleteCb: this.recordDeleteCb,
+            onConfirmCb: this.confirmCb,
         }))
     },
 
@@ -55,9 +56,14 @@ const IShop = React.createClass({
         this.setState((currState, props) => {
             return {
                 activeRecords: currState.activeRecords.filter(rec => rec.id !== itemId),
-                selectedRecord: null
+                // do not loose focus if other than selected record has to be deleted
+                selectedRecord: currState.selectedRecord === itemId ? null : currState.selectedRecord
             };
         });
+    },
+
+    confirmCb: function(message) {
+        return confirm(message);
     },
 
     render: function () {

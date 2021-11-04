@@ -1,8 +1,10 @@
 const IShopItem = React.createClass({
+
     displayName: "IShopItem",
 
     getDefaultProps: () => ({
-       deleteBtnText: "Удалить"
+        deleteBtnText: "Удалить",
+        confirmDeletePrompt: "Удалить запись \"%\"?"
     }),
 
     propTypes: {
@@ -17,24 +19,24 @@ const IShopItem = React.createClass({
         onFocusChangeCb: React.PropTypes.func,
         onLostFocusCb: React.PropTypes.func,
         onRecordDeleteCb: React.PropTypes.func,
+        onConfirmCb: React.PropTypes.func,
     },
 
-    changeFocusHandler: function(EO) {
+    changeFocusHandler: function (EO) {
         if (this.props.onFocusChangeCb)
             this.props.onFocusChangeCb(this.props.id);
     },
 
-    deleteRecordHandler: function(EO) {
-        // EO.stopPropagation();
-        this.changeFocusHandler(EO);
-        if (this.props.onRecordDeleteCb) {
+    deleteRecordHandler: function (EO) {
+        EO.stopPropagation(); // do not select record during delete process
+        EO.preventDefault();
+        if (this.props.onConfirmCb(this.props.confirmDeletePrompt.replace("%", this.props.name)) && this.props.onRecordDeleteCb) {
             this.props.onRecordDeleteCb(this.props.id);
         }
     },
 
-    lostFocus: function(EO) {
-        if (this.props.onLostFocusCb)
-            this.props.onLostFocusCb(this.props.id);
+    lostFocusHandler: function (EO) {
+        if (this.props.onLostFocusCb) this.props.onLostFocusCb(this.props.id);
     },
 
     render: function () {
@@ -43,7 +45,7 @@ const IShopItem = React.createClass({
             : "IShopItem selected";
         return React.DOM.div({
                 className: className, tabIndex: this.props.id,
-                onClick: this.changeFocusHandler, onBlur: this.lostFocus
+                onClick: this.changeFocusHandler, onBlur: this.lostFocusHandler
             },
             React.DOM.div(null, this.props.name),
             React.DOM.div(null, this.props.price),
