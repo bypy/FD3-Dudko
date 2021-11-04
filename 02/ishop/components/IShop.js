@@ -9,7 +9,8 @@ const IShop = React.createClass({
     getInitialState: function () {
         return {
             selectedRecord: this.props.selectedRecord,
-            activeRecords: this.props.records
+            activeRecords: this.props.records,
+            lastSelected: null,
         }
     },
 
@@ -34,8 +35,8 @@ const IShop = React.createClass({
             details: cardRecord.details,
             focus: this.state.selectedRecord,
             onFocusChangeCb: this.focusChangeCb,
-            onLostFocusCb: this.lostFocusCb,
             onRecordDeleteCb: this.recordDeleteCb,
+            onRecordDeleteCancelCb: this.onRecordDeleteCancelCb,
             onConfirmCb: this.confirmCb,
         }))
     },
@@ -44,36 +45,23 @@ const IShop = React.createClass({
         this.setState({selectedRecord: itemId});
     },
 
-    lostFocusCb: function (itemId) {
-        this.setState((currState, props) => ({
-                // if last selected record stays the same after loosing focus then no other record is selected
-                selectedRecord: (currState.selectedRecord === itemId) ? null : this.state.selectedRecord
-            })
-        )
-    },
-
     recordDeleteCb: function (itemId) {
-        this.setState((currState, props) => {
-            return {
-                activeRecords: currState.activeRecords.filter(rec => rec.id !== itemId),
-                // do not loose focus if other than selected record has to be deleted
-                selectedRecord: currState.selectedRecord === itemId ? null : currState.selectedRecord
-            };
-        });
+        this.setState({activeRecords: this.state.activeRecords.filter(rec => rec.id !== itemId)});
     },
 
-    confirmCb: function(message) {
+    confirmCb: function (message) {
         return confirm(message);
+    },
+
+    onRecordDeleteCancelCb: function () {
+        this.setState({selectedRecord: this.state.lastSelected})
     },
 
     render: function () {
         return React.DOM.div({className: "IShop"},
             React.DOM.div({className: "caption"}, this.props.caption),
-            this.getHeader(this.props.headline, this.dropFocus),
-            this.getRecords(
-                this.state.activeRecords, this.state.selectedRecord,
-                this.focusChangeCb, this.lostFocusCb, this.recordDeleteCb
-            )
+            this.getHeader(this.props.headline),
+            this.getRecords()
         )
     }
 })

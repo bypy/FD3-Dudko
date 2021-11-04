@@ -17,7 +17,6 @@ const IShopItem = React.createClass({
         details: React.PropTypes.string.isRequired,
         focus: React.PropTypes.number,
         onFocusChangeCb: React.PropTypes.func,
-        onLostFocusCb: React.PropTypes.func,
         onRecordDeleteCb: React.PropTypes.func,
         onConfirmCb: React.PropTypes.func,
     },
@@ -30,13 +29,10 @@ const IShopItem = React.createClass({
     deleteRecordHandler: function (EO) {
         EO.stopPropagation(); // do not select record during delete process
         EO.preventDefault();
-        if (this.props.onConfirmCb(this.props.confirmDeletePrompt.replace("%", this.props.name)) && this.props.onRecordDeleteCb) {
+        const prompt = this.props.confirmDeletePrompt.replace("%", this.props.name);
+        if (this.props.onConfirmCb(prompt) && this.props.onRecordDeleteCb) {
             this.props.onRecordDeleteCb(this.props.id);
         }
-    },
-
-    lostFocusHandler: function (EO) {
-        if (this.props.onLostFocusCb) this.props.onLostFocusCb(this.props.id);
     },
 
     render: function () {
@@ -45,7 +41,7 @@ const IShopItem = React.createClass({
             : "IShopItem selected";
         return React.DOM.div({
                 className: className, tabIndex: this.props.id,
-                onClick: this.changeFocusHandler, onBlur: this.lostFocusHandler
+                onClick: this.changeFocusHandler
             },
             React.DOM.div(null, this.props.name),
             React.DOM.div(null, this.props.price),

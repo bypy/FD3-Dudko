@@ -33,23 +33,26 @@
     flex-basis: 25%;
 }
 
-.IShopItem div:nth-child(2) {
+.IShopItem div:nth-child(4) {
+    flex-grow: 1;
+}
+
+.IShopItem div:nth-child(2),
+.IShopItem div:nth-child(3),
+.IShopItem div:nth-child(7){
     flex-basis: 10%;
+    max-width: 10ex;
     text-align: center;
 }
 
-.IShopItem div:nth-child(3) {
-    flex-basis: 10%;
-    text-align: center;
-}
 
 .IShopItem div:nth-child(5) {
     flex-basis: 10%;
+    max-width: 15ex;
     text-align: center;
 }
 
 .IShopItem div:nth-child(6) {
-    flex-shrink: 1;
-    flex-grow: 1;
+    flex-basis: 10%;
     text-align: center;
 }
