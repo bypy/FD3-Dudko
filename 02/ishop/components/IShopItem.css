@@ -3,6 +3,7 @@
     flex-flow: row nowrap;
     border-top: 1px solid black;
     background-color: cornsilk;
+    transition: background-color 0.1s ease-in-out;
 }
 
 .IShopItem > div {

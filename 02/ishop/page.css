@@ -17,7 +17,7 @@ html, body {
 
 .container {
     box-sizing: border-box;
-    max-width: 100%;
+    width: 100%;
     background-color: #e3eee4;
     padding: 1rem;
     font-family: 'Roboto Condensed', sans-serif;
