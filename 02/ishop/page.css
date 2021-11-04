@@ -18,6 +18,7 @@ html, body {
 .container {
     box-sizing: border-box;
     width: 100%;
+    max-width: 1600px;
     background-color: #e3eee4;
     padding: 1rem;
     font-family: 'Roboto Condensed', sans-serif;
