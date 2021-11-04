@@ -2,8 +2,7 @@ const IShopItem = React.createClass({
     displayName: "IShopItem",
 
     getDefaultProps: () => ({
-        deleteBtnText: "Удалить",
-        confirmPrompt: "Удалить запись {%%}?"
+       deleteBtnText: "Удалить"
     }),
 
     propTypes: {
@@ -18,23 +17,24 @@ const IShopItem = React.createClass({
         onFocusChangeCb: React.PropTypes.func,
         onLostFocusCb: React.PropTypes.func,
         onRecordDeleteCb: React.PropTypes.func,
-        confirmMethod: React.PropTypes.func,
     },
 
-    changeFocusHandler: function (EO) {
-        if (this.props.onFocusChangeCb) this.props.onFocusChangeCb(
-            this.props.confirmPrompt.replace("{%%}", this.props.name));
+    changeFocusHandler: function(EO) {
+        if (this.props.onFocusChangeCb)
+            this.props.onFocusChangeCb(this.props.id);
     },
 
-    deleteRecordHandler: function (EO) {
-        EO.stopPropagation();
-        //this.changeFocusHandler(EO);
-        if (this.props.confirmMethod) this.props.confirmMethod(this.props.name)
-        if (this.props.onRecordDeleteCb) this.props.onRecordDeleteCb(this.props.id);
+    deleteRecordHandler: function(EO) {
+        // EO.stopPropagation();
+        this.changeFocusHandler(EO);
+        if (this.props.onRecordDeleteCb) {
+            this.props.onRecordDeleteCb(this.props.id);
+        }
     },
 
-    lostFocusHandler: function (EO) {
-        if (this.props.onLostFocusCb) this.props.onLostFocusCb(this.props.id);
+    lostFocus: function(EO) {
+        if (this.props.onLostFocusCb)
+            this.props.onLostFocusCb(this.props.id);
     },
 
     render: function () {
@@ -43,7 +43,7 @@ const IShopItem = React.createClass({
             : "IShopItem selected";
         return React.DOM.div({
                 className: className, tabIndex: this.props.id,
-                onClick: this.changeFocusHandler, onBlur: this.lostFocusHandler
+                onClick: this.changeFocusHandler, onBlur: this.lostFocus
             },
             React.DOM.div(null, this.props.name),
             React.DOM.div(null, this.props.price),

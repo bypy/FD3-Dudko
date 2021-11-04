@@ -36,7 +36,6 @@ const IShop = React.createClass({
             onFocusChangeCb: focusChangeCb,
             onLostFocusCb: lostFocusCb,
             onRecordDeleteCb: recordDeleteCb,
-            confirmMethod: confirm,
         }))
     },
 
