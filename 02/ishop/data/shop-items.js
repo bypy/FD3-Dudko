@@ -1,6 +1,6 @@
-let lab01_data;
+let lab02_data;
 (function o() {
-    lab01_data = {
+    lab02_data = {
         caption: "Интернет-магазин",
         headline: ["Название", "Цена", "Валюта", "URL", "Количество", "Примечание"],
         records: [
