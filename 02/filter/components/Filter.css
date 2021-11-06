@@ -1,3 +1,28 @@
 .Filter {
+  display: flex;
+  max-width: 40em;
+  margin: auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.Filter .sort {
+  flex: 0 0 auto;
+}
+
+.Filter .filter-string {
+  flex: 0 0 70%;
+}
+
+.Filter .reset {
+  flex: 0 0 20%;
+}
+
+.Filter .display {
+  flex: 0 0 auto;
+  margin: 1em auto 0 auto;
   padding: 0.5em 1em 0.5em 0.5em;
+
 }

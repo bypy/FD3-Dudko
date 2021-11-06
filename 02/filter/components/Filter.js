@@ -1,4 +1,5 @@
 const Filter = React.createClass({
+
   displayName: "FilterComponent",
 
   getDefaultProps() {
@@ -7,15 +8,10 @@ const Filter = React.createClass({
 
   getInitialState() {
     return {
-      words: this.props.words.filter(w => true), // create shallow copy of props.word array
+      words: this.props.words.filter(w => true), // create shallow copy of a props.word array
       isSort: this.props.isSort,
       filterString: this.props.filterString,
     }
-  },
-
-  comparatorFunc(curr, next) {
-    if (curr === next) return 0;
-    else return (curr.toLowerCase() < next.toLowerCase()) ? -1 : 1;
   },
 
   toggleSort(EO) {
@@ -29,6 +25,11 @@ const Filter = React.createClass({
   resetAllFilters(EO) {
     EO.preventDefault();
     this.setState(this.getInitialState());
+  },
+  
+  comparatorFunc(curr, next) {
+    if (curr === next) return 0;
+    else return (curr.toLowerCase() < next.toLowerCase()) ? -1 : 1;
   },
 
   getListVdom() {
@@ -50,7 +51,7 @@ const Filter = React.createClass({
       ),
       React.DOM.input(
         {
-          className: "filter", type: "text", value: this.state.filterString,
+          className: "filter-string", type: "text", value: this.state.filterString,
           onChange: this.applyFilter
         }
       ),
