@@ -1,11 +1,15 @@
 const Filter = React.createClass({
   displayName: "FilterComponent",
 
+  getDefaultProps() {
+    return { isSort: false, filterString: "", resetBtnText: "сброс" };
+  },
+
   getInitialState() {
     return {
       words: this.props.words.filter(w => true), // create shallow copy of props.word array
-      isSort: this.props.isSort || false,
-      filterString: this.props.filterString || "",
+      isSort: this.props.isSort,
+      filterString: this.props.filterString,
     }
   },
 
@@ -13,13 +17,18 @@ const Filter = React.createClass({
     if (curr === next) return 0;
     else return (curr.toLowerCase() < next.toLowerCase()) ? -1 : 1;
   },
-  
+
   toggleSort(EO) {
     this.setState({ isSort: EO.target.checked });
   },
 
   applyFilter(EO) {
     this.setState({ filterString: EO.target.value });
+  },
+
+  resetAllFilters(EO) {
+    EO.preventDefault();
+    this.setState(this.getInitialState());
   },
 
   getListVdom() {
@@ -43,6 +52,12 @@ const Filter = React.createClass({
         {
           className: "filter", type: "text", value: this.state.filterString,
           onChange: this.applyFilter
+        }
+      ),
+      React.DOM.input(
+        {
+          className: "reset", type: "button", defaultValue: this.props.resetBtnText,
+          onClick: this.resetAllFilters
         }
       ),
       React.DOM.select(
