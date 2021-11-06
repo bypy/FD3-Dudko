@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="page.css">
     <link rel="stylesheet" href="components/Filter.css">
-    <title>iSHOP</title>
+    <title>:: FILTER ::</title>
 </head>
 
 <body>
@@ -25,7 +25,7 @@
                 ReactDOM.render(
                     React.DOM.div(
                         { className: "container" },
-                        React.createElement(Filter, { words: listOfWords, isSort: true })
+                        React.createElement(Filter, { words: listOfWords })
                     ),
                     document.getElementById("root")
                 );
