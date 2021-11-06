@@ -46,7 +46,7 @@ const Filter = React.createClass({
     if (filterString.length > 0) {
       list = list.filter(w => w.indexOf(this.state.filterString) !== -1);
     }
-    return list.map((word, index) => React.DOM.option({ key: word, value: index }, word));
+    return list.map((word, index) => React.DOM.option({ key: btoa(word), value: index }, word));
   },
 
   render() {
