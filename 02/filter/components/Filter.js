@@ -2,15 +2,23 @@ const Filter = React.createClass({
 
   displayName: "FilterComponent",
 
+  propTypes: {
+    words: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+    isSort: React.PropTypes.bool,
+    filterString: React.PropTypes.string,
+  },
+
   getDefaultProps() {
-    return { isSort: false, filterString: "", resetBtnText: "сброс" };
+    return {
+      resetBtnText: "сброс"
+    };
   },
 
   getInitialState() {
     return {
       words: this.props.words.filter(w => true), // create shallow copy of a props.word array
-      isSort: this.props.isSort,
-      filterString: this.props.filterString,
+      isSort: this.props.isSort || false,
+      filterString: this.props.filterString || "",
     }
   },
 
@@ -26,7 +34,7 @@ const Filter = React.createClass({
     EO.preventDefault();
     this.setState(this.getInitialState());
   },
-  
+
   comparatorFunc(curr, next) {
     if (curr === next) return 0;
     else return (curr.toLowerCase() < next.toLowerCase()) ? -1 : 1;
