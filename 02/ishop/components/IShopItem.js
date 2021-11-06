@@ -40,8 +40,7 @@ const IShopItem = React.createClass({
             ? "IShopItem"
             : "IShopItem selected";
         return React.DOM.div({
-                className: className, tabIndex: this.props.id,
-                onClick: this.changeFocusHandler
+                className: className, onClick: this.changeFocusHandler
             },
             React.DOM.div(null, this.props.name),
             React.DOM.div(null, this.props.price),
