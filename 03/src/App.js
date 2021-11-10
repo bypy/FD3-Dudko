@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import './page.css';
+import '../public/page.css';
 import IShop from './components/IShop';
 
 // import lab02_data from './data/shop-items.json';

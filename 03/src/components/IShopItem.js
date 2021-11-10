@@ -41,8 +41,10 @@ class IShopItem extends React.Component {
     return (
       <div
         className={className}
-        onClick={(e) => this.changeFocusHandler(e)}
-        onKeyDown={(e) => this.changeFocusHandler(e)} // stub
+        onClick={this.changeFocusHandler}
+        onKeyDown={this.changeFocusHandler}
+        // onClick={(e) => this.changeFocusHandler(e)}
+        // onKeyDown={(e) => this.changeFocusHandler(e)} // stub
         tabIndex={this.props.id}
         role="row"
       >
