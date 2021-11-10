@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "livebuild": "npx webpack serve --progress --colors"
+    "livebuild": "npx webpack serve"
   },
   "keywords": [],
   "author": "Dudko_A",

@@ -10,17 +10,20 @@ module.exports = {
   entry: './src/App.js',
   output: {
     filename: 'bundle.[contenthash].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist', 'public'),
     clean: true,
   },
   mode: 'development',
   devtool: 'source-map',
   devServer: {
     static: {
-      directory: path.join(__dirname, 'dist'),
+      publicPath: path.join(__dirname, 'dist'),
+      serveIndex: true,
     },
-    index: `${servePage}`,
-    port: 9000,
+    watchFiles: ['./*.js', './*.json', 'src/**/*', 'public/*'],
+    client: {
+      progress: true,
+    },
   },
   module: {
     rules: [
@@ -48,7 +51,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env'],
-            // plugins: ['@babel/plugin-transform-runtime'],
+            plugins: ['@babel/plugin-transform-runtime'],
           },
         },
       },
@@ -64,8 +67,8 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       filename: `${servePage}`,
-      template: './src/index.html',
-      favicon: './src/images/favicon.ico',
+      template: './public/index.html',
+      favicon: './public/images/favicon.ico',
     }),
   ],
 };
