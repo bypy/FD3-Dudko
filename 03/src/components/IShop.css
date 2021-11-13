@@ -55,9 +55,8 @@
 
 
 .IShop .item-properties div:nth-child(2),
-.IShop .item-properties div:nth-child(3),
-.IShop .item-properties div:nth-child(7) {
-    flex-basis: 10%;
+.IShop .item-properties div:nth-child(3) {
+    flex-basis: 8%;
     max-width: 10ex;
 }
 
@@ -68,4 +67,9 @@
 
 .IShop .item-properties div:nth-child(6) {
     flex-basis: 10%;
+}
+
+.IShop .item-properties div:nth-child(7) {
+    flex-basis: 15%;
+    max-width: 15ex;
 }

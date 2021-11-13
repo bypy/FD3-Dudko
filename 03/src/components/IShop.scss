@@ -1,0 +1,107 @@
+$bg-table: white;
+$bg-header: gainsboro;
+$header-cells-count: 7;
+$header-text-color: black;
+$table-border-color: darkslategray;
+$table-outer-border-width: 2px;
+$table-inner-border-width: 1px;
+$border-inner: solid $table-inner-border-width $table-border-color;
+$border-outer: solid $table-outer-border-width $table-border-color;
+
+
+.IShop {
+
+  box-sizing: border-box;
+  background: $bg-table;
+  //border: $border-outer;
+
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  .caption {
+    height: 3em;
+    border-bottom: $border-outer;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .headerWrapper {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: $bg-header;
+    border-bottom: $border-outer;
+  }
+
+  .iShopHeader {
+    display: flex;
+    flex-flow: row wrap;
+    word-wrap: break-word;
+
+    .cell {
+      width: calc(100% / #{$header-cells-count});
+      padding: 0.5em 0.5em;
+      border-right: $border-inner;
+      color: $header-text-color;
+      text-align: center;
+
+      &:last-child {
+        border-right: 0;
+      }
+    }
+
+  }
+
+}
+
+@media all and (max-width: 767px) {
+  .IShop {
+    .iShopHeader {
+      .cell {
+        width: calc(100% / #{$header-cells-count - 1});
+
+        &.first {
+          width: 100%;
+          border-right: 0;
+          border-bottom: solid $table-inner-border-width $table-border-color;
+        }
+      }
+    }
+  }
+}
+
+@media all and (max-width: 430px) {
+  .IShop {
+    .flex-table {
+      .cell {
+        border-bottom: 0;
+      }
+
+      .cell:last-of-type {
+        border-bottom: solid 1px $table-border-color;
+      }
+    }
+
+    .iShopHeader {
+      .cell {
+        border-bottom: $table-inner-border-width;
+      }
+    }
+
+    .cell {
+      width: 100%; //1px = border right
+
+      &.first {
+        width: 100%;
+        border-bottom: solid $table-inner-border-width $table-border-color;
+      }
+    }
+
+    .flex-cell {
+      width: 100%; //1px = border right
+    }
+  }
+}

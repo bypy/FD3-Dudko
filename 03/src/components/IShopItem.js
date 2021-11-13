@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './IShopItem.css';
+import './IShopItem.scss';
 
 class IShopItem extends React.Component {
   static propTypes = {
@@ -20,6 +20,7 @@ class IShopItem extends React.Component {
 
   static defaultProps = {
     deleteBtnText: 'Удалить',
+    editBtnText: 'Редактировать',
     confirmDeletePrompt: 'Удалить запись "%"?',
   };
 
@@ -40,22 +41,37 @@ class IShopItem extends React.Component {
     const className = this.props.id !== this.props.focus ? 'IShopItem' : 'IShopItem selected';
     return (
       <div
-        className={className}
+        className={`${className}`}
         onClick={this.changeFocusHandler}
         onKeyDown={this.changeFocusHandler}
-        // onClick={(e) => this.changeFocusHandler(e)}
-        // onKeyDown={(e) => this.changeFocusHandler(e)} // stub
         tabIndex={this.props.id}
         role="row"
       >
-        <div>{this.props.name}</div>
-        <div>{this.props.price}</div>
-        <div>{this.props.currency}</div>
-        <div>{this.props.url}</div>
-        <div>{this.props.quantity}</div>
-        <div>{this.props.details}</div>
-        <div>
-          <input type="button" value={this.props.deleteBtnText} onClick={(e) => this.deleteRecordHandler(e)} />
+        <div className="cell first" role="cell">
+          {this.props.name}
+        </div>
+        <div className="cell" role="cell">
+          {this.props.price}
+        </div>
+        <div className="cell" role="cell">
+          {this.props.currency}
+        </div>
+        <div className="cell" role="cell">
+          {this.props.url}
+        </div>
+        <div className="cell" role="cell">
+          {this.props.quantity}
+        </div>
+        <div className="cell" role="cell">
+          {this.props.details}
+        </div>
+        <div className="cell" role="row">
+          <div className="actionBtn" role="cell">
+            <input type="button" value={this.props.editBtnText} onClick={(e) => this.deleteRecordHandler(e)} />
+          </div>
+          <div className="actionBtn" role="cell">
+            <input type="button" value={this.props.deleteBtnText} onClick={(e) => this.deleteRecordHandler(e)} />
+          </div>
         </div>
       </div>
     );

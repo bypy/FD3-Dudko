@@ -38,13 +38,11 @@
 }
 
 .IShopItem div:nth-child(2),
-.IShopItem div:nth-child(3),
-.IShopItem div:nth-child(7){
-    flex-basis: 10%;
+.IShopItem div:nth-child(3) {
+    flex-basis: 8%;
     max-width: 10ex;
     text-align: center;
 }
-
 
 .IShopItem div:nth-child(5) {
     flex-basis: 10%;
@@ -55,4 +53,16 @@
 .IShopItem div:nth-child(6) {
     flex-basis: 10%;
     text-align: center;
+}
+
+.IShopItem div:nth-child(7) {
+    flex-basis: 15%;
+    max-width: 15ex;
+    text-align: center;
+}
+
+
+.IShopItem .actionBtn {
+    align-self: center;
+    overflow-x: hidden;
 }

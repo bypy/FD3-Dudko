@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './IShop.css';
+import './IShop.scss';
 
 import IShopItem from './IShopItem';
 
@@ -34,13 +34,16 @@ class IShop extends React.Component {
 
   static defaultProps = {
     selectedRecord: null,
+    tableAria: 'Anti-virus price-list',
   };
 
   getHeader(shopCardProperties) {
     return (
-      <div className="item-properties">
+      <div className="iShopHeader" role="row">
         {shopCardProperties.map((property, index) => (
-          <div key={index}>{property}</div>
+          <div key={index} className={index === 0 ? 'cell first' : 'cell'} role="columnheader">
+            {property}
+          </div>
         ))}
       </div>
     );
@@ -77,9 +80,11 @@ class IShop extends React.Component {
 
   render() {
     return (
-      <div className="IShop">
-        <div className="caption">{this.props.caption}</div>
-        {this.getHeader(this.props.headline)}
+      <div className="IShop" role="table" aria-label={this.props.tableAria}>
+        <div className="headerWrapper">
+          <div className="caption">{this.props.caption}</div>
+          {this.getHeader(this.props.headline)}
+        </div>
         {this.getRecords()}
       </div>
     );
