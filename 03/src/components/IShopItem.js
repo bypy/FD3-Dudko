@@ -47,7 +47,7 @@ class IShopItem extends React.Component {
         tabIndex={this.props.id}
         role="row"
       >
-        <div className="cell first" role="cell">
+        <div className="cell first left-align" role="cell">
           {this.props.name}
         </div>
         <div className="cell" role="cell">
@@ -56,7 +56,7 @@ class IShopItem extends React.Component {
         <div className="cell" role="cell">
           {this.props.currency}
         </div>
-        <div className="cell" role="cell">
+        <div className="cell left-align" role="cell">
           {this.props.url}
         </div>
         <div className="cell" role="cell">
@@ -67,10 +67,10 @@ class IShopItem extends React.Component {
         </div>
         <div className="cell" role="row">
           <div className="actionBtn" role="cell">
-            <input type="button" value={this.props.editBtnText} onClick={(e) => this.deleteRecordHandler(e)} />
+            <button type="button" onClick={this.deleteRecordHandler}>{this.props.editBtnText}</button>
           </div>
           <div className="actionBtn" role="cell">
-            <input type="button" value={this.props.deleteBtnText} onClick={(e) => this.deleteRecordHandler(e)} />
+            <button type="button" onClick={this.deleteRecordHandler}>{this.props.deleteBtnText}</button>
           </div>
         </div>
       </div>

@@ -1,6 +1,8 @@
 $cells-total-count: 7;
+$bg-table: white;
 $item-bg-color: beige;
 $item-text-color: black;
+$item-font-size: 1rem;
 $selected-item-bg-color: antiquewhite;
 $item-border-width: 1px;
 $item-border-double-width: 2px;
@@ -14,16 +16,19 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
   display: flex;
   flex-flow: row wrap;
 
-  & ~ .IShopItem {
-    border-top: $border;
-  }
-
   &:nth-child(even) {
     background: $item-bg-color;
+    .cell.first {
+      z-index: 11;
+      background: $item-bg-color;
+    }
   }
 
   &.selected {
     background-color: $selected-item-bg-color;
+    .cell.first {
+      background-color: $selected-item-bg-color;
+    }
   }
 
   .cell {
@@ -34,16 +39,32 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
 
     text-align: center; // horizontal align
     word-wrap: break-word;
+    word-break: break-all;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center; // vertical align
+
+    &.left-align {
+      text-align: left;
+    }
 
     &:last-child {
       border-right: 0;
     }
 
+    &.first {
+      background: $bg-table;
+      z-index: 11;
+    }
+
     .actionBtn:last-child {
       margin-top: .5em;
+    }
+
+    .actionBtn button {
+      font-family: inherit;
+      word-wrap: break-word;
     }
 
   }
@@ -53,21 +74,23 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
   .IShopItem {
 
     &:not(:last-child) {
-      border-bottom: $border-bold;
+      border-bottom: $border;
     }
 
     .cell {
       width: calc(100% / #{$cells-total-count - 1});
-      position: sticky;
-      z-index: 10;
-      top: 200px;
+      font-size: $item-font-size * 3 / 4;
 
       &.first {
+        position: sticky;
+        z-index: 10;
+        top: 118px;
         width: 100%;
         border-right: 0;
         border-bottom: $border;
+        filter: opacity(0.96);
+        text-align: center;
       }
-
     }
 
   }

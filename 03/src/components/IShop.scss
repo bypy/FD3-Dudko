@@ -2,6 +2,7 @@ $bg-table: white;
 $bg-header: gainsboro;
 $header-cells-count: 7;
 $header-text-color: black;
+$header-font-size: 1rem;
 $table-border-color: darkslategray;
 $table-outer-border-width: 2px;
 $table-inner-border-width: 1px;
@@ -39,7 +40,8 @@ $border-outer: solid $table-outer-border-width $table-border-color;
   .iShopHeader {
     display: flex;
     flex-flow: row wrap;
-    word-wrap: break-word;
+    align-items: center;
+    word-wrap: normal;
 
     .cell {
       width: calc(100% / #{$header-cells-count});
@@ -47,6 +49,10 @@ $border-outer: solid $table-outer-border-width $table-border-color;
       border-right: $border-inner;
       color: $header-text-color;
       text-align: center;
+      word-wrap: break-word;
+      word-break: break-all;
+      overflow-x: hidden;
+      font-size: $header-font-size;
 
       &:last-child {
         border-right: 0;
@@ -59,9 +65,18 @@ $border-outer: solid $table-outer-border-width $table-border-color;
 
 @media all and (max-width: 767px) {
   .IShop {
+
     .iShopHeader {
+      min-height: 70px;
+      align-items: normal;
+
       .cell {
         width: calc(100% / #{$header-cells-count - 1});
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        padding: 0.25em 0.25em;
+        font-size: $header-font-size * 3 / 4;
 
         &.first {
           width: 100%;
