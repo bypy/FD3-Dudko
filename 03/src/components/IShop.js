@@ -81,8 +81,8 @@ class IShop extends React.Component {
   render() {
     return (
       <div className="IShop" role="table" aria-label={this.props.tableAria}>
+        <div className="caption">{this.props.caption}</div>
         <div className="headerWrapper">
-          <div className="caption">{this.props.caption}</div>
           {this.getHeader(this.props.headline)}
         </div>
         {this.getRecords()}

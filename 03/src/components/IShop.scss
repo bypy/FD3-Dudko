@@ -22,6 +22,7 @@ $border-outer: solid $table-outer-border-width $table-border-color;
 
   .caption {
     height: 3em;
+    background-color: $bg-header;
     border-bottom: $border-outer;
     text-transform: uppercase;
     display: flex;
