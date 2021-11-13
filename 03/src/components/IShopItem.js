@@ -65,13 +65,13 @@ class IShopItem extends React.Component {
         <div className="cell" role="cell">
           {this.props.details}
         </div>
-        <div className="cell" role="row">
-          <div className="actionBtn" role="cell">
-            <button type="button" onClick={this.deleteRecordHandler}>{this.props.editBtnText}</button>
-          </div>
-          <div className="actionBtn" role="cell">
-            <button type="button" onClick={this.deleteRecordHandler}>{this.props.deleteBtnText}</button>
-          </div>
+        <div className="cell column" role="table">
+          <button className="actionBtn" onClick={this.deleteRecordHandler}>
+            {this.props.editBtnText}
+          </button>
+          <button className="actionBtn" onClick={this.deleteRecordHandler}>
+            {this.props.deleteBtnText}
+          </button>
         </div>
       </div>
     );

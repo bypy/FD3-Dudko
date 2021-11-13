@@ -1,5 +1,5 @@
 $bg-table: white;
-$bg-header: gainsboro;
+$bg-header: #e9e9ed;
 $header-cells-count: 7;
 $header-text-color: black;
 $header-font-size: 1rem;
@@ -14,7 +14,7 @@ $border-outer: solid $table-outer-border-width $table-border-color;
 
   box-sizing: border-box;
   background: $bg-table;
-  //border: $border-outer;
+  border: $border-outer;
 
   *, *:before, *:after {
     box-sizing: inherit;
@@ -92,36 +92,35 @@ $border-outer: solid $table-outer-border-width $table-border-color;
     }
   }
 }
-//
-//@media all and (max-width: 430px) {
-//  .IShop {
-//    .flex-table {
-//      .cell {
-//        border-bottom: 0;
-//      }
-//
-//      .cell:last-of-type {
-//        border-bottom: solid 1px $table-border-color;
-//      }
-//    }
-//
-//    .iShopHeader {
-//      .cell {
-//        border-bottom: $table-inner-border-width;
-//      }
-//    }
-//
-//    .cell {
-//      width: 100%; //1px = border right
-//
-//      &.first {
-//        width: 100%;
-//        border-bottom: solid $table-inner-border-width $table-border-color;
-//      }
-//    }
-//
-//    .flex-cell {
-//      width: 100%; //1px = border right
-//    }
-//  }
-//}
+
+@media all and (max-width: 430px) {
+
+  .IShop {
+
+    .iShopHeader {
+      counter-reset: property-number;
+      min-height: 140px;
+
+      .cell {
+        display: flex;
+        flex-flow: row nowrap;
+        width: 100%;
+        border-right: 0;
+        counter-increment: property-number;
+
+        &::before {
+          content: counter(property-number)". ";
+          margin-right: 2ex;
+          color: dimgray;
+        }
+        &.first {
+          border-bottom: 0;
+        }
+      }
+
+    }
+
+  }
+
+}
+

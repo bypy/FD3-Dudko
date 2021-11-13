@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: dimgrey;
+    background-color: #e9e9ed;
 }
 
 html, body {
@@ -21,7 +21,7 @@ html, body {
     box-sizing: border-box;
     width: 100%;
     max-width: 1600px;
-    background-color: #e3eee4;
+    background-color: #e9e9ed;
     padding: 1rem;
     font-family: 'Roboto Condensed', sans-serif;
 }

@@ -29,15 +29,6 @@
       "details": "2 ПК на 2 года"
     },
     {
-      "id": 3,
-      "name": "Антивирусное ПО \"Panda Essential\"",
-      "price": 1188,
-      "currency": "RUR",
-      "url": "https://www.cloudav.ru/bitrix/templates/panda_new_home/panda_files/img/dome_essential.png",
-      "quantity": 16,
-      "details": "1 ПК на 1 год"
-    },
-    {
       "id": 4,
       "name": "Антивирусное ПО \"KasperskyInternet Security\"",
       "price": 1526,
@@ -45,6 +36,15 @@
       "url": "https://atmosoft.ru/img/kaspersky2.png",
       "quantity": 6,
       "details": "2 ПК на 1 год"
+    },
+    {
+      "id": 3,
+      "name": "Антивирусное ПО \"Panda Essential\"",
+      "price": 1188,
+      "currency": "RUR",
+      "url": "https://www.cloudav.ru/bitrix/templates/panda_new_home/panda_files/img/dome_essential.png",
+      "quantity": 16,
+      "details": "1 ПК на 1 год"
     }
   ]
 }
