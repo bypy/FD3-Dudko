@@ -66,6 +66,10 @@ $border-outer: solid $table-outer-border-width $table-border-color;
 @media all and (max-width: 767px) {
   .IShop {
 
+    .caption {
+      font-size: $header-font-size * 3 / 4;
+    }
+
     .iShopHeader {
       min-height: 70px;
       align-items: normal;
@@ -87,36 +91,36 @@ $border-outer: solid $table-outer-border-width $table-border-color;
     }
   }
 }
-
-@media all and (max-width: 430px) {
-  .IShop {
-    .flex-table {
-      .cell {
-        border-bottom: 0;
-      }
-
-      .cell:last-of-type {
-        border-bottom: solid 1px $table-border-color;
-      }
-    }
-
-    .iShopHeader {
-      .cell {
-        border-bottom: $table-inner-border-width;
-      }
-    }
-
-    .cell {
-      width: 100%; //1px = border right
-
-      &.first {
-        width: 100%;
-        border-bottom: solid $table-inner-border-width $table-border-color;
-      }
-    }
-
-    .flex-cell {
-      width: 100%; //1px = border right
-    }
-  }
-}
+//
+//@media all and (max-width: 430px) {
+//  .IShop {
+//    .flex-table {
+//      .cell {
+//        border-bottom: 0;
+//      }
+//
+//      .cell:last-of-type {
+//        border-bottom: solid 1px $table-border-color;
+//      }
+//    }
+//
+//    .iShopHeader {
+//      .cell {
+//        border-bottom: $table-inner-border-width;
+//      }
+//    }
+//
+//    .cell {
+//      width: 100%; //1px = border right
+//
+//      &.first {
+//        width: 100%;
+//        border-bottom: solid $table-inner-border-width $table-border-color;
+//      }
+//    }
+//
+//    .flex-cell {
+//      width: 100%; //1px = border right
+//    }
+//  }
+//}
