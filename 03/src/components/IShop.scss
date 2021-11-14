@@ -62,6 +62,21 @@ $border-outer: solid $table-outer-border-width $table-border-color;
 
   }
 
+  .addRecordBtn {
+    background: $bg-header;
+    border-top: $border-inner;
+    padding: 1em 0;
+    text-align: center;
+
+    button {
+      display: inline-block;
+      padding: 0.5em 1em;
+      background: white;
+      border-radius: 0.5em;
+      border: 1px solid #8f8f9d;
+    }
+  }
+
 }
 
 @media all and (max-width: 767px) {

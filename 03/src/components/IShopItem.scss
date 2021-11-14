@@ -60,14 +60,19 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
       z-index: 11;
     }
 
+    .actionBtn {
+      max-width: 20ex;
+      font-family: inherit;
+    }
+
     .actionBtn:last-child {
       margin-top: .5em;
     }
 
-    .actionBtn button {
-      font-family: inherit;
-      word-wrap: break-word;
+    &.column {
+      align-items: center;
     }
+
 
   }
 }
