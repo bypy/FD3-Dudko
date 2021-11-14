@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $bg-table: white;
 $bg-header: #e9e9ed;
 $header-cells-count: 7;
@@ -96,7 +98,7 @@ $border-outer: solid $table-outer-border-width $table-border-color;
         flex-flow: column nowrap;
         justify-content: center;
         padding: 0.25em 0.25em;
-        font-size: $header-font-size * 3 / 4;
+        font-size: math.div($header-font-size * 3, 4);
 
         &.first {
           width: 100%;

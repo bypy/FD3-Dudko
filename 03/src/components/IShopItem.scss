@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $cells-total-count: 7;
 $bg-table: white;
 $item-bg-color: #e9e9ed;
@@ -86,7 +88,7 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
 
     .cell {
       width: calc(100% / #{$cells-total-count - 1});
-      font-size: $item-font-size * 3 / 4;
+      font-size: math.div($item-font-size * 3, 4);
 
       &.first {
         position: sticky;
