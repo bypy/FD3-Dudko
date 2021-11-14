@@ -14,7 +14,7 @@ $border: $item-border-width $item-border-style $item-border-color;
 $border-bold: $item-border-double-width $item-border-style $item-border-color;
 
 .IShopItem {
-
+  font-size: 100%;
   display: flex;
   flex-flow: row wrap;
 
@@ -124,6 +124,7 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
         position: absolute;
         left: 0.25em;
         color: dimgray;
+        font-size: 0.75em;
       }
 
       &.first {

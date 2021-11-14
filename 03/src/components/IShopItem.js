@@ -13,7 +13,7 @@ class IShopItem extends React.Component {
     quantity: PropTypes.number.isRequired,
     details: PropTypes.string.isRequired,
     focus: PropTypes.number,
-    onFocusChangeCb: PropTypes.func,
+    onHasFocusCb: PropTypes.func,
     onRecordDeleteCb: PropTypes.func,
     onConfirmCb: PropTypes.func,
   };
@@ -24,8 +24,8 @@ class IShopItem extends React.Component {
     confirmDeletePrompt: 'Удалить запись "%"?',
   };
 
-  changeFocusHandler = () => {
-    if (this.props.onFocusChangeCb) this.props.onFocusChangeCb(this.props.id);
+  hasFocusHandler = () => {
+    if (this.props.onHasFocusCb) this.props.onHasFocusCb(this.props.id);
   };
 
   deleteRecordHandler = (EO) => {
@@ -42,8 +42,8 @@ class IShopItem extends React.Component {
     return (
       <div
         className={`${className}`}
-        onClick={this.changeFocusHandler}
-        onKeyDown={this.changeFocusHandler}
+        onClick={this.hasFocusHandler}
+        onKeyDown={this.hasFocusHandler}
         tabIndex={this.props.id}
         role="row"
       >

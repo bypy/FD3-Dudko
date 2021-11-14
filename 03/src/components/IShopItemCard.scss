@@ -1,0 +1,67 @@
+@use "sass:math";
+
+$cells-total-count: 7;
+$border: 1px solid darkslategray;
+$border-bold: 2px solid darkslategray;
+$bg-color: white;
+$bg-stripe-color: #e9e9ed;
+$header-text-color: black;
+$header-font-size: 1rem;
+
+.IShopItemCard {
+
+  box-sizing: border-box;
+
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  background: $bg-color;
+  border: $border-bold;
+  margin-top: 1em;
+
+  .row {
+    display: flex;
+    flex-flow: row nowrap;
+    &:nth-child(even) {
+      background: $bg-stripe-color;
+    }
+  }
+
+  .cell {
+    padding: 0.5em;
+
+    &:first-child {
+      min-width: calc(100% / #{$cells-total-count});
+      border-right: $border;
+      color: $header-text-color;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    &:not(:first-child) {
+      flex-grow: 1;
+    }
+
+    .userDataInput {
+      //width: 100%;
+      padding: 5px 10px;
+      font-size: inherit;
+      font-family: inherit;
+    }
+  }
+
+}
+
+@media all and (max-width: 767px) {
+
+  .IShopItemCard {
+    .cardHeader {
+      .cell {
+        font-size: math.div($header-font-size * 3, 4);
+      }
+    }
+  }
+
+}

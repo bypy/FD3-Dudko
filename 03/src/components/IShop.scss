@@ -15,12 +15,13 @@ $border-outer: solid $table-outer-border-width $table-border-color;
 .IShop {
 
   box-sizing: border-box;
-  background: $bg-table;
-  border: $border-outer;
-
   *, *:before, *:after {
     box-sizing: inherit;
   }
+
+  background: $bg-table;
+  border: $border-outer;
+
 
   .caption {
     height: 3em;
@@ -85,7 +86,7 @@ $border-outer: solid $table-outer-border-width $table-border-color;
   .IShop {
 
     .caption {
-      font-size: $header-font-size * 3 / 4;
+      font-size: math.div($header-font-size * 3, 4);
     }
 
     .iShopHeader {
@@ -129,6 +130,8 @@ $border-outer: solid $table-outer-border-width $table-border-color;
           content: counter(property-number)". ";
           margin-right: 2ex;
           color: dimgray;
+          font-size: 0.75em;
+          transform: translateY(2px);
         }
         &.first {
           border-bottom: 0;

@@ -1,21 +1,13 @@
 import React from 'react';
+import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import './IShop.scss';
 
 import IShopItem from './IShopItem';
+import IShopItemCard from './IShopItemCard';
 
 class IShop extends React.Component {
-  constructor(props) {
-    super(props);
-    // initial state
-    this.state = {
-      caption: this.props.caption || 'Just another IShop',
-      selectedRecord: this.props.selectedRecord,
-      shopRecords: this.props.records,
-    };
-  }
-
   static propTypes = {
     caption: PropTypes.string,
     headline: PropTypes.array.isRequired,
@@ -34,42 +26,26 @@ class IShop extends React.Component {
 
   static defaultProps = {
     selectedRecord: null,
+    selectedRecordData: null,
     tableAria: 'Anti-virus price-list',
+    addBtnText: 'Новый',
   };
 
-  getHeader(shopCardProperties) {
-    return (
-      <div className="iShopHeader" role="row">
-        {shopCardProperties.map((property, index) => (
-          <div key={index} className={index === 0 ? 'cell first' : 'cell'} role="columnheader">
-            {property}
-          </div>
-        ))}
-      </div>
-    );
-  }
+  state = {
+    caption: this.props.caption || 'Just another IShop',
+    selectedRecord: this.props.selectedRecord,
+    selectedRecordData: this.props.selectedRecordData,
+    shopRecords: this.props.records,
+  };
 
-  getRecords() {
-    return this.state.shopRecords.map((cardRecord) => (
-      <IShopItem
-        key={cardRecord.id}
-        id={cardRecord.id}
-        name={cardRecord.name}
-        price={cardRecord.price}
-        currency={cardRecord.currency}
-        url={cardRecord.url}
-        quantity={cardRecord.quantity}
-        details={cardRecord.details}
-        focus={this.state.selectedRecord}
-        onFocusChangeCb={this.focusChangeCb}
-        onRecordDeleteCb={this.recordDeleteCb}
-        onConfirmCb={this.confirmCb}
-      />
-    ));
+  getRecordData(id) {
+    const filterResult = this.state.shopRecords.filter((cardRecord) => id === cardRecord.id);
+    return filterResult.length > 0 ? filterResult[0] : null;
   }
 
   focusChangeCb = (itemId) => {
     this.setState({ selectedRecord: itemId });
+    this.setState({ selectedRecordData: this.getRecordData(itemId) });
   };
 
   recordDeleteCb = (itemId) => {
@@ -80,13 +56,42 @@ class IShop extends React.Component {
 
   render() {
     return (
-      <div className="IShop" role="table" aria-label={this.props.tableAria}>
-        <div className="caption">{this.props.caption}</div>
-        <div className="headerWrapper">
-          {this.getHeader(this.props.headline)}
+      <Fragment>
+        <div className="IShop" role="table" aria-label={this.props.tableAria}>
+          <div className="caption">{this.props.caption}</div>
+          <div className="headerWrapper">
+            <div className="iShopHeader" role="row">
+              {this.props.headline.map((property, index) => (
+                <div key={index} className={index === 0 ? 'cell first' : 'cell'} role="columnheader">
+                  {property}
+                </div>
+              ))}
+            </div>
+          </div>
+          {this.state.shopRecords.map((cardRecord) => (
+            <IShopItem
+              key={cardRecord.id}
+              id={cardRecord.id}
+              name={cardRecord.name}
+              price={cardRecord.price}
+              currency={cardRecord.currency}
+              url={cardRecord.url}
+              quantity={cardRecord.quantity}
+              details={cardRecord.details}
+              focus={this.state.selectedRecord}
+              onHasFocusCb={this.focusChangeCb}
+              onRecordDeleteCb={this.recordDeleteCb}
+              onConfirmCb={this.confirmCb}
+            />
+          ))}
+          <div className="addRecordBtn">
+            <button>{this.props.addBtnText}</button>
+          </div>
         </div>
-        {this.getRecords()}
-      </div>
+        {this.state.selectedRecord && this.state.selectedRecordData && (
+          <IShopItemCard cardData={this.state.selectedRecordData} headline={this.props.headline} />
+        )}
+      </Fragment>
     );
   }
 }
