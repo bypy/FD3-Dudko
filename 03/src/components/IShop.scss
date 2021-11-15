@@ -72,11 +72,9 @@ $border-outer: solid $table-outer-border-width $table-border-color;
     text-align: center;
 
     button {
-      display: inline-block;
-      padding: 0.5em 1em;
-      background: white;
-      border-radius: 0.5em;
-      border: 1px solid #8f8f9d;
+      padding: 5px 10px;
+      font-size: inherit;
+      font-family: inherit;
     }
   }
 

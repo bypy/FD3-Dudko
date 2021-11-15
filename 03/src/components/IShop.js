@@ -35,6 +35,7 @@ class IShop extends React.Component {
     caption: this.props.caption || 'Just another IShop',
     selectedRecord: this.props.selectedRecord,
     selectedRecordData: this.props.selectedRecordData,
+    selectedRecordEditMode: false,
     shopRecords: this.props.records,
   };
 
@@ -43,13 +44,24 @@ class IShop extends React.Component {
     return filterResult.length > 0 ? filterResult[0] : null;
   }
 
-  focusChangeCb = (itemId) => {
+  setSelectedRecord(itemId) {
     this.setState({ selectedRecord: itemId });
     this.setState({ selectedRecordData: this.getRecordData(itemId) });
+  }
+
+  focusChangeCb = (itemId) => {
+    this.setSelectedRecord(itemId);
+    this.setState({ selectedRecordEditMode: false });
+  };
+
+  recordEditCb = (itemId) => {
+    this.setSelectedRecord(itemId);
+    this.setState({ selectedRecordEditMode: true });
   };
 
   recordDeleteCb = (itemId) => {
     this.setState({ shopRecords: this.state.shopRecords.filter((rec) => rec.id !== itemId) });
+    this.setState({ selectedRecordEditMode: false });
   };
 
   confirmCb = (message) => confirm(message);
@@ -80,6 +92,7 @@ class IShop extends React.Component {
               details={cardRecord.details}
               focus={this.state.selectedRecord}
               onHasFocusCb={this.focusChangeCb}
+              onRecordEditCb={this.recordEditCb}
               onRecordDeleteCb={this.recordDeleteCb}
               onConfirmCb={this.confirmCb}
             />
@@ -88,8 +101,12 @@ class IShop extends React.Component {
             <button>{this.props.addBtnText}</button>
           </div>
         </div>
-        {this.state.selectedRecord && this.state.selectedRecordData && (
-          <IShopItemCard cardData={this.state.selectedRecordData} headline={this.props.headline} />
+        {this.state.selectedRecord !== null && this.state.selectedRecordData !== null && (
+          <IShopItemCard
+            headline={this.props.headline}
+            cardData={this.state.selectedRecordData}
+            editMode={this.state.selectedRecordEditMode}
+          />
         )}
       </Fragment>
     );

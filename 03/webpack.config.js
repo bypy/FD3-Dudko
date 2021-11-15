@@ -9,7 +9,8 @@ const servePage = 'index.html';
 module.exports = {
   entry: './src/App.js',
   output: {
-    filename: 'bundle.[contenthash].js',
+    // filename: 'bundle.[contenthash].js',
+    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist', 'public'),
     clean: true,
   },
@@ -63,7 +64,8 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'styles.[contenthash].css',
+      // filename: 'styles.[contenthash].css',
+      filename: 'styles.css',
     }),
     new HtmlWebpackPlugin({
       filename: `${servePage}`,

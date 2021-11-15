@@ -15,6 +15,7 @@ class IShopItem extends React.Component {
     focus: PropTypes.number,
     onHasFocusCb: PropTypes.func,
     onRecordDeleteCb: PropTypes.func,
+    onRecordEditCb: PropTypes.func,
     onConfirmCb: PropTypes.func,
   };
 
@@ -35,6 +36,12 @@ class IShopItem extends React.Component {
     if (this.props.onConfirmCb(promptMessage) && this.props.onRecordDeleteCb) {
       this.props.onRecordDeleteCb(this.props.id);
     }
+  };
+
+  editRecordHandler = (EO) => {
+    EO.stopPropagation(); // we do not want to onFocus event to be fired
+    EO.preventDefault();
+    if (this.props.onRecordEditCb) this.props.onRecordEditCb(this.props.id)
   };
 
   render() {
@@ -66,7 +73,7 @@ class IShopItem extends React.Component {
           {this.props.details}
         </div>
         <div className="cell column" role="table">
-          <button className="actionBtn" onClick={this.deleteRecordHandler}>
+          <button className="actionBtn" onClick={this.editRecordHandler}>
             {this.props.editBtnText}
           </button>
           <button className="actionBtn" onClick={this.deleteRecordHandler}>

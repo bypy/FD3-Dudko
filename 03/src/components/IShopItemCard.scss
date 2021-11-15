@@ -23,16 +23,21 @@ $header-font-size: 1rem;
   .row {
     display: flex;
     flex-flow: row nowrap;
+    min-height: 50px;
     &:nth-child(even) {
       background: $bg-stripe-color;
     }
   }
 
   .cell {
-    padding: 0.5em;
+    padding-left: 1em;
+    flex-grow: 0;
+    flex-shrink: 0;
+
 
     &:first-child {
-      min-width: calc(100% / #{$cells-total-count});
+      padding-left: 0.5em;
+      width: calc(100% / #{$cells-total-count});
       border-right: $border;
       color: $header-text-color;
       display: flex;
@@ -40,15 +45,25 @@ $header-font-size: 1rem;
       justify-content: center;
     }
 
-    &:not(:first-child) {
-      flex-grow: 1;
+    &:nth-child(2) {
+      margin-left: 1em;
+      align-self: center;
     }
 
     .userDataInput {
-      //width: 100%;
-      padding: 5px 10px;
+      margin-left: -1em;
+      padding: 5px 14px;
       font-size: inherit;
+      line-height: 1.3;
       font-family: inherit;
+    }
+
+
+
+    .actionBtn {
+      font-family: inherit;
+      font-size: inherit;
+      padding: 5px 10px;
     }
   }
 
