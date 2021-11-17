@@ -22,15 +22,21 @@ export default class IShopItemCard extends React.Component {
 
   static defaultProps = {
     validationIsEnabled: true,
-    editMode: false, // false-view; true-edit
+    editMode: false, // false-view mode; true-edit mode
     saveBtnText: 'Сохранить',
     cancelBtnText: 'Отмена',
     errorInfo: null,
   };
 
   state = {
-    validation: {},
-    userData: {}
+    isValid: true,
+    id: this.props.cardData.id,
+    name: this.props.cardData.name,
+    price: this.props.cardData.price,
+    currency: this.props.cardData.currency,
+    url: this.props.cardData.url,
+    quantity: this.props.cardData.quantity,
+    details: this.props.cardData.details,
   };
 
   recordSaveHandler = (EO) => {
@@ -48,7 +54,11 @@ export default class IShopItemCard extends React.Component {
     console.log(EO.target);
   };
 
-  getCardRow(header, value) {
+  userInputHandler = (EO, fieldName) => {
+    this.setState({ [fieldName]: EO.target.value });
+  };
+
+  getCardRow(header, value, handler) {
     return (
       <div className="row" role="row">
         <div className="cell" role="cell">
@@ -56,12 +66,7 @@ export default class IShopItemCard extends React.Component {
         </div>
         <div className="cell" role="cell">
           {this.props.editMode ? (
-            <input
-              className="userDataInput"
-              size={value.toString().length}
-              value={value}
-              onChange={this.recordValidationHandler}
-            />
+            <input className="userDataInput" size={value.toString().length} value={value} onChange={handler} />
           ) : (
             value
           )}
@@ -72,25 +77,29 @@ export default class IShopItemCard extends React.Component {
 
   render() {
     return (
-      <div className="IShopItemCard" role="table" data-id={this.props.cardData.id}>
-        {this.getCardRow(this.props.headline[0], this.props.cardData.name)}
-        {this.getCardRow(this.props.headline[1], this.props.cardData.price)}
-        {this.getCardRow(this.props.headline[2], this.props.cardData.currency)}
-        {this.getCardRow(this.props.headline[3], this.props.cardData.url)}
-        {this.getCardRow(this.props.headline[4], this.props.cardData.quantity)}
-        {this.getCardRow(this.props.headline[5], this.props.cardData.details)}
+      <div className="IShopItemCard" role="table" data-id={'# ' + this.state.id}>
+        {this.getCardRow(this.props.headline[0], this.state.name, (EO) => this.userInputHandler(EO, 'name'))}
+        {this.getCardRow(this.props.headline[1], this.state.price, (EO) => this.userInputHandler(EO, 'price'))}
+        {this.getCardRow(this.props.headline[2], this.state.currency, (EO) =>
+          this.userInputHandler(EO, 'currency')
+        )}
+        {this.getCardRow(this.props.headline[3], this.state.url, (EO) => this.userInputHandler(EO, 'url'))}
+        {this.getCardRow(this.props.headline[4], this.state.quantity, (EO) =>
+          this.userInputHandler(EO, 'quantity')
+        )}
+        {this.getCardRow(this.props.headline[5], this.state.details, (EO) =>
+          this.userInputHandler(EO, 'details')
+        )}
 
         {this.props.editMode && (
           <div className="row" role="row">
             <div className="cell" role="cell">
               {this.props.headline[6]}
             </div>
-            <div className="cell" role="cell">
+            <div className="cell button-cell" role="cell">
               <button className="actionBtn" onClick={this.recordSaveHandler}>
                 {this.props.saveBtnText}
               </button>
-            {/*</div>*/}
-            {/*<div className="cell" role="cell">*/}
               <button className="actionBtn" onClick={this.recordEditCancelHandler}>
                 {this.props.cancelBtnText}
               </button>

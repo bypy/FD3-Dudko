@@ -49,7 +49,7 @@ class IShop extends React.Component {
     this.setState({ selectedRecordData: this.getRecordData(itemId) });
   }
 
-  focusChangeCb = (itemId) => {
+  changeSelectedRecordCb = (itemId) => {
     this.setSelectedRecord(itemId);
     this.setState({ selectedRecordEditMode: false });
   };
@@ -91,18 +91,19 @@ class IShop extends React.Component {
               quantity={cardRecord.quantity}
               details={cardRecord.details}
               focus={this.state.selectedRecord}
-              onHasFocusCb={this.focusChangeCb}
+              onHasFocusCb={this.changeSelectedRecordCb}
               onRecordEditCb={this.recordEditCb}
               onRecordDeleteCb={this.recordDeleteCb}
               onConfirmCb={this.confirmCb}
             />
           ))}
           <div className="addRecordBtn">
-            <button>{this.props.addBtnText}</button>
+            <button disabled={this.state.selectedRecordEditMode}>{this.props.addBtnText}</button>
           </div>
         </div>
         {this.state.selectedRecord !== null && this.state.selectedRecordData !== null && (
           <IShopItemCard
+            key={this.state.selectedRecordData.id}
             headline={this.props.headline}
             cardData={this.state.selectedRecordData}
             editMode={this.state.selectedRecordEditMode}
