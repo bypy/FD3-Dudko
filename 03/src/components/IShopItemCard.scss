@@ -16,18 +16,20 @@ $header-font-size: 1rem;
     box-sizing: inherit;
   }
 
+  position: relative;
   background: $bg-color;
   border: $border-bold;
   margin-top: 1em;
 
   &:before {
     content: attr(data-id);
-    display: block;
-    padding: 0.25em;
-    border-bottom: $border;
-    font-size: 2em;
+    position: absolute;
+    right: 0.1875em;
+    top: 0;
+    z-index: 1;
+    font-size: 6em;
     font-family: inherit;
-    color: darken($bg-stripe-color, 20);
+    color: rgba(darken($bg-stripe-color, 20), 0.5);
   }
 
   .row {
