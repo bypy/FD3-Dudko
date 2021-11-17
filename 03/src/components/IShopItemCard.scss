@@ -20,6 +20,16 @@ $header-font-size: 1rem;
   border: $border-bold;
   margin-top: 1em;
 
+  &:before {
+    content: attr(data-id);
+    display: block;
+    padding: 0.25em;
+    border-bottom: $border;
+    font-size: 2em;
+    font-family: inherit;
+    color: darken($bg-stripe-color, 20);
+  }
+
   .row {
     display: flex;
     flex-flow: row nowrap;
@@ -36,13 +46,14 @@ $header-font-size: 1rem;
 
 
     &:first-child {
-      padding-left: 0.5em;
+      padding-left: 0;
       width: calc(100% / #{$cells-total-count});
       border-right: $border;
       color: $header-text-color;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
     }
 
     &:nth-child(2) {
@@ -50,20 +61,26 @@ $header-font-size: 1rem;
       align-self: center;
     }
 
+    &.button-cell {
+      margin-left: 0;
+    }
+
     .userDataInput {
       margin-left: -1em;
-      padding: 5px 14px;
+      padding: 5px calc(1em - 2px); // 2px borders
       font-size: inherit;
       line-height: 1.3;
       font-family: inherit;
     }
 
-
-
     .actionBtn {
       font-family: inherit;
       font-size: inherit;
       padding: 5px 10px;
+
+      &:nth-child(2) {
+        margin-left: 1em;
+      }
     }
   }
 
