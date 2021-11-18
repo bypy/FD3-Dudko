@@ -22,6 +22,7 @@ class IShop extends React.Component {
         details: PropTypes.string.isRequired,
       })
     ),
+    validator: PropTypes.func,
   };
 
   static defaultProps = {
@@ -107,6 +108,7 @@ class IShop extends React.Component {
             headline={this.props.headline}
             cardData={this.state.selectedRecordData}
             editMode={this.state.selectedRecordEditMode}
+            validator={this.props.validator}
           />
         )}
       </Fragment>

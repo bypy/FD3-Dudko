@@ -41,7 +41,7 @@ class IShopItem extends React.Component {
   editRecordHandler = (EO) => {
     EO.stopPropagation(); // we do not want to onFocus event to be fired
     EO.preventDefault();
-    if (this.props.onRecordEditCb) this.props.onRecordEditCb(this.props.id)
+    if (this.props.onRecordEditCb) this.props.onRecordEditCb(this.props.id);
   };
 
   render() {
