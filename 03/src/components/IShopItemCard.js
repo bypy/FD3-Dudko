@@ -75,29 +75,29 @@ export default class IShopItemCard extends React.Component {
     this.props.onRecordEditCancelCb();
   };
 
-  // checkFormIsValid = () => {
-  //   let {
-  //     idValidation,
-  //     nameValidation,
-  //     priceValidation,
-  //     currencyValidation,
-  //     urlValidation,
-  //     quantityValidation,
-  //     detailsValidation,
-  //   } = this.state;
-  //   let errors = [
-  //     idValidation,
-  //     nameValidation,
-  //     priceValidation,
-  //     currencyValidation,
-  //     urlValidation,
-  //     quantityValidation,
-  //     detailsValidation,
-  //   ].find((error) => error !== null);
-  //   if (errors.length > 0) {
-  //     this.setState({ formIsValid: false });
-  //   }
-  // };
+  checkFormIsValid = () => {
+    let {
+      idValidation,
+      nameValidation,
+      priceValidation,
+      currencyValidation,
+      urlValidation,
+      quantityValidation,
+      detailsValidation,
+    } = this.state;
+    let errors = [
+      idValidation,
+      nameValidation,
+      priceValidation,
+      currencyValidation,
+      urlValidation,
+      quantityValidation,
+      detailsValidation,
+    ].find((error) => error !== null);
+    if (!errors && !this.state.formIsValid) {
+      this.setState({ formIsValid: true });
+    }
+  };
 
   userInputHandler = (EO, fieldName) => {
     this.setState({ unsavedChanges: true });
@@ -107,6 +107,8 @@ export default class IShopItemCard extends React.Component {
     if (validationError) {
       this.setState({ formIsValid: false });
       this.setState({ [fieldName.concat('Validation')]: validationError });
+    } else {
+      this.setState({ [fieldName.concat('Validation')]: null });
     }
   };
 
@@ -123,7 +125,7 @@ export default class IShopItemCard extends React.Component {
               size={value.toString().length}
               value={value}
               onChange={editHandler}
-              // onBlur={this.checkFormIsValid}
+              onBlur={this.checkFormIsValid}
             />
           )}
           {errorMessage && <span className="errMessage">{errorMessage}</span>}
