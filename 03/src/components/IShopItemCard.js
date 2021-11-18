@@ -47,6 +47,7 @@ export default class IShopItemCard extends React.Component {
     quantityValidation: null,
     detailsValidation: null,
     formIsValid: true,
+    unsavedChanges: false,
   };
 
   recordSaveHandler = (EO) => {
@@ -99,6 +100,7 @@ export default class IShopItemCard extends React.Component {
   // };
 
   userInputHandler = (EO, fieldName) => {
+    this.setState({ unsavedChanges: true });
     this.setState({ [fieldName]: EO.target.value });
     if (!this.props.validationIsEnabled) return;
     let validationError = this.props.validator(EO.target.value, this.getValidationRulesByFieldName(fieldName));
@@ -108,7 +110,7 @@ export default class IShopItemCard extends React.Component {
     }
   };
 
-  getCardRow(header, value, editHandler) {
+  getCardRow(header, value, errorMessage, editHandler) {
     return (
       <div className="row" role="row">
         <div className="cell" role="cell">
@@ -124,6 +126,8 @@ export default class IShopItemCard extends React.Component {
               // onBlur={this.checkFormIsValid}
             />
           )}
+          {errorMessage && <span className="errMessage">{errorMessage}</span>}
+
           {!this.props.editMode && value}
         </div>
       </div>
@@ -155,12 +159,24 @@ export default class IShopItemCard extends React.Component {
   render() {
     return (
       <div className="IShopItemCard" role="table" data-id={'# ' + this.state.id}>
-        {this.getCardRow(this.props.headline[0], this.state.name, (EO) => this.userInputHandler(EO, 'name'))}
-        {this.getCardRow(this.props.headline[1], this.state.price, (EO) => this.userInputHandler(EO, 'price'))}
-        {this.getCardRow(this.props.headline[2], this.state.currency, (EO) => this.userInputHandler(EO, 'currency'))}
-        {this.getCardRow(this.props.headline[3], this.state.url, (EO) => this.userInputHandler(EO, 'url'))}
-        {this.getCardRow(this.props.headline[4], this.state.quantity, (EO) => this.userInputHandler(EO, 'quantity'))}
-        {this.getCardRow(this.props.headline[5], this.state.details, (EO) => this.userInputHandler(EO, 'details'))}
+        {this.getCardRow(this.props.headline[0], this.state.name, this.state.nameValidation, (EO) =>
+          this.userInputHandler(EO, 'name')
+        )}
+        {this.getCardRow(this.props.headline[1], this.state.price, this.state.priceValidation, (EO) =>
+          this.userInputHandler(EO, 'price')
+        )}
+        {this.getCardRow(this.props.headline[2], this.state.currency, this.state.currencyValidation, (EO) =>
+          this.userInputHandler(EO, 'currency')
+        )}
+        {this.getCardRow(this.props.headline[3], this.state.url, this.state.urlValidation, (EO) =>
+          this.userInputHandler(EO, 'url')
+        )}
+        {this.getCardRow(this.props.headline[4], this.state.quantity, this.state.quantityValidation, (EO) =>
+          this.userInputHandler(EO, 'quantity')
+        )}
+        {this.getCardRow(this.props.headline[5], this.state.details, this.state.detailsValidation, (EO) =>
+          this.userInputHandler(EO, 'details')
+        )}
 
         {this.props.editMode && (
           <div className="row" role="row">
@@ -168,7 +184,11 @@ export default class IShopItemCard extends React.Component {
               {this.props.headline[6]}
             </div>
             <div className="cell button-cell" role="cell">
-              <button className="actionBtn" disabled={!this.state.isValid} onClick={this.recordSaveHandler}>
+              <button
+                className="actionBtn"
+                disabled={!(this.state.formIsValid && this.state.unsavedChanges)}
+                onClick={this.recordSaveHandler}
+              >
                 {this.props.saveBtnText}
               </button>
               <button className="actionBtn" onClick={this.recordEditCancelHandler}>
