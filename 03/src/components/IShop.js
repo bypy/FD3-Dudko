@@ -26,18 +26,17 @@ class IShop extends React.Component {
   };
 
   static defaultProps = {
-    selectedRecord: null,
-    selectedRecordData: null,
     tableAria: 'Anti-virus price-list',
     addBtnText: 'Новый',
   };
 
   state = {
     caption: this.props.caption || 'Just another IShop',
-    selectedRecord: this.props.selectedRecord,
-    selectedRecordData: this.props.selectedRecordData,
-    selectedRecordEditMode: false,
+    selectedRecord: null,
+    selectedRecordData: null,
     shopRecords: this.props.records,
+    editMode: false,
+    editInProgress: false,
   };
 
   getRecordData(id) {
@@ -52,17 +51,21 @@ class IShop extends React.Component {
 
   changeSelectedRecordCb = (itemId) => {
     this.setSelectedRecord(itemId);
-    this.setState({ selectedRecordEditMode: false });
+    this.setState({ editMode: false });
   };
 
   recordEditCb = (itemId) => {
     this.setSelectedRecord(itemId);
-    this.setState({ selectedRecordEditMode: true });
+    this.setState({ editMode: true });
   };
 
   recordDeleteCb = (itemId) => {
     this.setState({ shopRecords: this.state.shopRecords.filter((rec) => rec.id !== itemId) });
-    this.setState({ selectedRecordEditMode: false });
+    this.setState({ editMode: false });
+  };
+
+  editInProgressCb = (status) => {
+    this.setState({ editInProgress: status });
   };
 
   confirmCb = (message) => confirm(message);
@@ -96,10 +99,12 @@ class IShop extends React.Component {
               onRecordEditCb={this.recordEditCb}
               onRecordDeleteCb={this.recordDeleteCb}
               onConfirmCb={this.confirmCb}
+              editMode={this.state.editMode}
+              freezeMode={this.state.editInProgress}
             />
           ))}
           <div className="addRecordBtn">
-            <button disabled={this.state.selectedRecordEditMode}>{this.props.addBtnText}</button>
+            <button disabled={this.state.editMode}>{this.props.addBtnText}</button>
           </div>
         </div>
         {this.state.selectedRecord !== null && this.state.selectedRecordData !== null && (
@@ -107,8 +112,9 @@ class IShop extends React.Component {
             key={this.state.selectedRecordData.id}
             headline={this.props.headline}
             cardData={this.state.selectedRecordData}
-            editMode={this.state.selectedRecordEditMode}
+            editMode={this.state.editMode}
             validator={this.props.validator}
+            onEditInProgressCb={this.editInProgressCb}
           />
         )}
       </Fragment>

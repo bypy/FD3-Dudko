@@ -17,6 +17,8 @@ class IShopItem extends React.Component {
     onRecordDeleteCb: PropTypes.func,
     onRecordEditCb: PropTypes.func,
     onConfirmCb: PropTypes.func,
+    editMode: PropTypes.bool,
+    freezeMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -26,10 +28,12 @@ class IShopItem extends React.Component {
   };
 
   hasFocusHandler = () => {
+    if (this.props.freezeMode) return;
     if (this.props.onHasFocusCb) this.props.onHasFocusCb(this.props.id);
   };
 
   deleteRecordHandler = (EO) => {
+    if (this.props.editMode) return;
     EO.stopPropagation(); // do not select record during delete process
     EO.preventDefault();
     const promptMessage = this.props.confirmDeletePrompt.replace('%', this.props.name);
@@ -39,6 +43,7 @@ class IShopItem extends React.Component {
   };
 
   editRecordHandler = (EO) => {
+    if (this.props.freezeMode) return;
     EO.stopPropagation(); // we do not want to onFocus event to be fired
     EO.preventDefault();
     if (this.props.onRecordEditCb) this.props.onRecordEditCb(this.props.id);
@@ -73,10 +78,10 @@ class IShopItem extends React.Component {
           {this.props.details}
         </div>
         <div className="cell column" role="table">
-          <button className="actionBtn" onClick={this.editRecordHandler}>
+          <button className="actionBtn" disabled={this.props.freezeMode} onClick={this.editRecordHandler}>
             {this.props.editBtnText}
           </button>
-          <button className="actionBtn" onClick={this.deleteRecordHandler}>
+          <button className="actionBtn" disabled={this.props.editMode} onClick={this.deleteRecordHandler}>
             {this.props.deleteBtnText}
           </button>
         </div>

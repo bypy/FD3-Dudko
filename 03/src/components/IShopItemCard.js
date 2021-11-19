@@ -18,8 +18,9 @@ export default class IShopItemCard extends React.Component {
       details: PropTypes.string.isRequired,
     }),
     editMode: PropTypes.bool,
+    onEditInProgressCb: PropTypes.func,
+    onEditCancelCb: PropTypes.func,
     onRecordSaveCb: PropTypes.func,
-    onRecordEditCancelCb: PropTypes.func,
     validator: PropTypes.func,
   };
 
@@ -60,19 +61,37 @@ export default class IShopItemCard extends React.Component {
       this.props.onRecordSaveCb([
         this.state.id,
         this.state.name,
-        this.state.price,
+        Number(this.state.price),
         this.state.currency,
         this.state.url,
-        this.state.quantity,
+        Number(this.state.quantity),
         this.state.details,
       ]);
     }
   };
 
-  recordEditCancelHandler = (EO) => {
-    // eslint-disable-next-line no-console
-    console.log(EO.target);
-    this.props.onRecordEditCancelCb();
+  recordEditCancelHandler = () => {
+    this.setState(
+      {
+        id: this.props.cardData.id,
+        name: this.props.cardData.name,
+        price: this.props.cardData.price.toString(),
+        currency: this.props.cardData.currency,
+        url: this.props.cardData.url,
+        quantity: this.props.cardData.quantity.toString(),
+        details: this.props.cardData.details,
+        idValidation: null,
+        nameValidation: null,
+        priceValidation: null,
+        currencyValidation: null,
+        urlValidation: null,
+        quantityValidation: null,
+        detailsValidation: null,
+        formIsValid: true,
+        unsavedChanges: false,
+      },
+      this.editProgressHandler
+    );
   };
 
   checkFormIsValidAndChanged = () => {
@@ -98,9 +117,9 @@ export default class IShopItemCard extends React.Component {
       this.state.quantity !== this.props.cardData.quantity.toString() || // String vs. Number
       this.state.details !== this.props.cardData.details
     ) {
-      this.setState({ unsavedChanges: true });
+      this.setState({ unsavedChanges: true }, this.editProgressHandler);
     } else if (this.state.unsavedChanges) {
-      this.setState({ unsavedChanges: false }); // if we've got the same form stuff after editing
+      this.setState({ unsavedChanges: false }, this.editProgressHandler); // if we've got the same form stuff after editing
     }
   };
 
@@ -118,54 +137,11 @@ export default class IShopItemCard extends React.Component {
     }
   };
 
-  getValidationRulesByFieldName(filedName) {
-    let rules = [];
-    switch (filedName) {
-      case 'name':
-        rules = [v.notEmpty, v.isString];
-        break;
-      case 'price':
-        rules = [v.notEmpty, v.isNumber];
-        break;
-      case 'currency':
-        rules = [v.notEmpty, v.isCurrency];
-        break;
-      case 'url':
-        rules = [v.notEmpty, v.isURL];
-        break;
-      case 'quantity':
-        rules = [v.notEmpty, v.isNumber, v.isNaturalNumber];
-        break;
-      case 'details':
-        rules = [v.notEmpty, v.isString, v.minLength(5)];
-        break;
+  editProgressHandler = () => {
+    if (this.props.onEditInProgressCb) {
+      this.props.onEditInProgressCb(this.state.unsavedChanges); // true: freeze UI; false: unfreeze
     }
-    return rules;
-  }
-
-  getCardRow(header, value, errorMessage, editHandler) {
-    return (
-      <div className="row" role="row">
-        <div className="cell" role="cell">
-          {header}
-        </div>
-        <div className="cell" role="cell">
-          {this.props.editMode && (
-            <input
-              className="userDataInput"
-              size={value.toString().length || 3} // 3 - default input width for empty content
-              value={value}
-              onChange={editHandler}
-              onBlur={this.checkChanges}
-            />
-          )}
-          {errorMessage && <span className="errMessage">{errorMessage}</span>}
-
-          {!this.props.editMode && value}
-        </div>
-      </div>
-    );
-  }
+  };
 
   render() {
     return (
@@ -208,6 +184,54 @@ export default class IShopItemCard extends React.Component {
             </div>
           </div>
         )}
+      </div>
+    );
+  }
+
+  getValidationRulesByFieldName(filedName) {
+    let rules = [];
+    switch (filedName) {
+      case 'name':
+        rules = [v.notEmpty, v.isString];
+        break;
+      case 'price':
+        rules = [v.notEmpty, v.isNumber];
+        break;
+      case 'currency':
+        rules = [v.notEmpty, v.isCurrency];
+        break;
+      case 'url':
+        rules = [v.notEmpty, v.isURL];
+        break;
+      case 'quantity':
+        rules = [v.notEmpty, v.isNumber, v.isNaturalNumber];
+        break;
+      case 'details':
+        rules = [v.notEmpty, v.isString, v.minLength(5)];
+        break;
+    }
+    return rules;
+  }
+
+  getCardRow(header, value, errorMessage, editHandler) {
+    return (
+      <div className="row" role="row">
+        <div className="cell" role="cell">
+          {header}
+        </div>
+        <div className="cell" role="cell">
+          {this.props.editMode && (
+            <input
+              className="userDataInput"
+              size={value.toString().length || 3} // 3 - default input width for empty content
+              value={value}
+              onChange={editHandler}
+            />
+          )}
+          {errorMessage && <span className="errMessage">{errorMessage}</span>}
+
+          {!this.props.editMode && value}
+        </div>
       </div>
     );
   }
