@@ -20,13 +20,13 @@ export default class IShopItemCard extends React.Component {
     editRecordMode: PropTypes.bool,
     createMode: PropTypes.bool,
     onEditInProgressCb: PropTypes.func,
-    onRecordSaveCb: PropTypes.func,
+    onSaveRecordCb: PropTypes.func,
     validator: PropTypes.func,
   };
 
   static defaultProps = {
-    validationIsEnabled: true,
     editRecordMode: false, // false-view mode; true-edit mode
+    createMode: false,
     saveBtnText: 'Сохранить',
     cancelBtnText: 'Отмена',
     errorInfo: null,
@@ -55,8 +55,8 @@ export default class IShopItemCard extends React.Component {
     if (!this.state.formIsValid) {
       return;
     }
-    if (this.props.onRecordSaveCb) {
-      this.props.onRecordSaveCb({
+    if (this.props.onSaveRecordCb) {
+      this.props.onSaveRecordCb({
         id: this.state.id,
         name: this.state.name,
         price: Number(this.state.price),
@@ -124,7 +124,6 @@ export default class IShopItemCard extends React.Component {
   userInputHandler = (EO, fieldName) => {
     this.setState({ unsavedChanges: true });
     this.setState({ [fieldName]: EO.target.value });
-    if (!this.props.validationIsEnabled) return;
     let validationError = this.props.validator(EO.target.value, this.getValidationRulesByFieldName(fieldName));
     if (validationError) {
       this.setState({ formIsValid: false });

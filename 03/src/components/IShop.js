@@ -68,8 +68,7 @@ class IShop extends React.Component {
     this.setState({ editInProgress: status });
   };
 
-  recordSaveCb = (editedCardData) => {
-    // this.setState({ selectedRecordData: itemCardData });
+  saveRecordCb = (editedCardData) => {
     let updatedShopRecords = this.state.shopRecords.map((cardData) => {
       if (cardData.id === editedCardData.id) return editedCardData;
       else return cardData;
@@ -77,7 +76,6 @@ class IShop extends React.Component {
     this.setState({ shopRecords: updatedShopRecords });
     this.setState({ editMode: false });
     this.setState({ editInProgress: false });
-    // this.setSelectedRecord(editedCardData.id);
   };
 
   confirmCb = (message) => confirm(message);
@@ -116,7 +114,7 @@ class IShop extends React.Component {
             />
           ))}
           <div className="addRecordBtn">
-            <button disabled={this.state.editMode}>{this.props.addBtnText}</button>
+            <button disabled={this.state.editMode} onClick={this.recordAdd}>{this.props.addBtnText}</button>
           </div>
         </div>
         {this.state.selectedRecord !== null && this.state.selectedRecordData !== null && (
@@ -127,7 +125,7 @@ class IShop extends React.Component {
             editRecordMode={this.state.editMode}
             createMode={this.state.createMode}
             onEditInProgressCb={this.editInProgressCb}
-            onRecordSaveCb={this.recordSaveCb}
+            onSaveRecordCb={this.saveRecordCb}
             validator={this.props.validator}
           />
         )}
