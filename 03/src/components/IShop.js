@@ -69,6 +69,10 @@ class IShop extends React.Component {
     this.setState({ editInProgress: status });
   };
 
+  editCancelCb = (itemId) => {
+    this.setState({ editMode: false, selectedRecord: itemId });
+  };
+
   saveRecordCb = (editedCardData) => {
     let updatedShopRecords = this.state.shopRecords.map((cardData) => {
       if (cardData.id === editedCardData.id) return editedCardData;
@@ -134,6 +138,7 @@ class IShop extends React.Component {
             editRecordMode={this.state.editMode}
             createMode={this.state.createMode}
             onEditInProgressCb={this.editInProgressCb}
+            onEditCancelCb={this.editCancelCb}
             onSaveRecordCb={this.saveRecordCb}
             validator={this.props.validator}
           />

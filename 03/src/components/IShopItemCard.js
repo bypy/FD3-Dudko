@@ -20,6 +20,7 @@ export default class IShopItemCard extends React.Component {
     editRecordMode: PropTypes.bool,
     createMode: PropTypes.bool,
     onEditInProgressCb: PropTypes.func,
+    onEditCancelCb: PropTypes.func,
     onSaveRecordCb: PropTypes.func,
     validator: PropTypes.func,
   };
@@ -90,6 +91,7 @@ export default class IShopItemCard extends React.Component {
       },
       this.editProgressHandler
     );
+    if (this.props.onEditCancelCb) this.props.onEditCancelCb(this.state.id);
   };
 
   checkFormIsValidAndChanged = () => {
