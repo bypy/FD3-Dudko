@@ -12,7 +12,7 @@ class IShopItem extends React.Component {
     url: PropTypes.string.isRequired,
     quantity: PropTypes.number.isRequired,
     details: PropTypes.string.isRequired,
-    focus: PropTypes.number,
+    selectedRecord: PropTypes.number,
     onHasFocusCb: PropTypes.func,
     onRecordDeleteCb: PropTypes.func,
     onRecordEditCb: PropTypes.func,
@@ -50,7 +50,7 @@ class IShopItem extends React.Component {
   };
 
   render() {
-    const className = this.props.id !== this.props.focus ? 'IShopItem' : 'IShopItem selected';
+    const className = this.props.id !== this.props.selectedRecord ? 'IShopItem' : 'IShopItem selected';
     return (
       <div
         className={`${className}`}

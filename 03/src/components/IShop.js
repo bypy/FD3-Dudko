@@ -68,6 +68,18 @@ class IShop extends React.Component {
     this.setState({ editInProgress: status });
   };
 
+  recordSaveCb = (editedCardData) => {
+    // this.setState({ selectedRecordData: itemCardData });
+    let updatedShopRecords = this.state.shopRecords.map((cardData) => {
+      if (cardData.id === editedCardData.id) return editedCardData;
+      else return cardData;
+    });
+    this.setState({ shopRecords: updatedShopRecords });
+    this.setState({ editMode: false });
+    this.setState({ editInProgress: false });
+    // this.setSelectedRecord(editedCardData.id);
+  };
+
   confirmCb = (message) => confirm(message);
 
   render() {
@@ -94,7 +106,7 @@ class IShop extends React.Component {
               url={cardRecord.url}
               quantity={cardRecord.quantity}
               details={cardRecord.details}
-              focus={this.state.selectedRecord}
+              selectedRecord={this.state.selectedRecord}
               onHasFocusCb={this.changeSelectedRecordCb}
               onRecordEditCb={this.recordEditCb}
               onRecordDeleteCb={this.recordDeleteCb}
@@ -112,9 +124,11 @@ class IShop extends React.Component {
             key={this.state.selectedRecordData.id}
             headline={this.props.headline}
             cardData={this.state.selectedRecordData}
-            editMode={this.state.editMode}
-            validator={this.props.validator}
+            editRecordMode={this.state.editMode}
+            createMode={this.state.createMode}
             onEditInProgressCb={this.editInProgressCb}
+            onRecordSaveCb={this.recordSaveCb}
+            validator={this.props.validator}
           />
         )}
       </Fragment>

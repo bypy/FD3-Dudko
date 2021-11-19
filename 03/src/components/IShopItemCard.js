@@ -17,16 +17,16 @@ export default class IShopItemCard extends React.Component {
       quantity: PropTypes.number.isRequired,
       details: PropTypes.string.isRequired,
     }),
-    editMode: PropTypes.bool,
+    editRecordMode: PropTypes.bool,
+    createMode: PropTypes.bool,
     onEditInProgressCb: PropTypes.func,
-    onEditCancelCb: PropTypes.func,
     onRecordSaveCb: PropTypes.func,
     validator: PropTypes.func,
   };
 
   static defaultProps = {
     validationIsEnabled: true,
-    editMode: false, // false-view mode; true-edit mode
+    editRecordMode: false, // false-view mode; true-edit mode
     saveBtnText: 'Сохранить',
     cancelBtnText: 'Отмена',
     errorInfo: null,
@@ -51,22 +51,20 @@ export default class IShopItemCard extends React.Component {
     unsavedChanges: false,
   };
 
-  recordSaveHandler = (EO) => {
-    // eslint-disable-next-line no-console
-    console.log(EO.target.value);
-    if (!this.state.isValid) {
+  recordSaveHandler = () => {
+    if (!this.state.formIsValid) {
       return;
     }
     if (this.props.onRecordSaveCb) {
-      this.props.onRecordSaveCb([
-        this.state.id,
-        this.state.name,
-        Number(this.state.price),
-        this.state.currency,
-        this.state.url,
-        Number(this.state.quantity),
-        this.state.details,
-      ]);
+      this.props.onRecordSaveCb({
+        id: this.state.id,
+        name: this.state.name,
+        price: Number(this.state.price),
+        currency: this.state.currency,
+        url: this.state.url,
+        quantity: Number(this.state.quantity),
+        details: this.state.details,
+      });
     }
   };
 
@@ -165,7 +163,7 @@ export default class IShopItemCard extends React.Component {
           this.userInputHandler(EO, 'details')
         )}
 
-        {this.props.editMode && (
+        {this.props.editRecordMode && (
           <div className="row" role="row">
             <div className="cell" role="cell">
               {this.props.headline[6]}
@@ -220,7 +218,7 @@ export default class IShopItemCard extends React.Component {
           {header}
         </div>
         <div className="cell" role="cell">
-          {this.props.editMode && (
+          {this.props.editRecordMode && (
             <input
               className="userDataInput"
               size={value.toString().length || 3} // 3 - default input width for empty content
@@ -230,7 +228,7 @@ export default class IShopItemCard extends React.Component {
           )}
           {errorMessage && <span className="errMessage">{errorMessage}</span>}
 
-          {!this.props.editMode && value}
+          {!this.props.editRecordMode && value}
         </div>
       </div>
     );
