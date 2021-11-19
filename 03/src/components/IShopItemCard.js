@@ -18,7 +18,6 @@ export default class IShopItemCard extends React.Component {
       details: PropTypes.string.isRequired,
     }),
     editRecordMode: PropTypes.bool,
-    createMode: PropTypes.bool,
     onEditInProgressCb: PropTypes.func,
     onEditCancelCb: PropTypes.func,
     onSaveRecordCb: PropTypes.func,
@@ -27,10 +26,8 @@ export default class IShopItemCard extends React.Component {
 
   static defaultProps = {
     editRecordMode: false, // false-view mode; true-edit mode
-    createMode: false,
     saveBtnText: 'Сохранить',
     cancelBtnText: 'Отмена',
-    errorInfo: null,
   };
 
   state = {
