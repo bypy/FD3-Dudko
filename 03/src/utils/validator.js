@@ -1,3 +1,5 @@
+const urlTest = require('./url-regexp');
+
 let amountToken = null;
 
 const getCheckMethod = (rule) => {
@@ -16,6 +18,8 @@ const getCheckMethod = (rule) => {
       return isNumberChecker;
     case 'IS-ENUM-OF-CURRENCIES':
       return isCurrencyChecker;
+    case 'IS-URL':
+      return isUrlChecker;
     case 'IS-NATURAL-NUMBER':
       return isNaturalNumberChecker;
     case 'MIN-LENGTH':
@@ -29,42 +33,48 @@ const trim = (value) => {
   return value ? value.trim() : '';
 };
 
-// All the methods called without parameter will be returning error message
+// All the methods called with NULL parameter will be returning error message
 // This behavior allows to reuse one checking methods by other checking methods
 
 // NOT-EMPTY checker
 const notEmptyChecker = (value) => {
-  if (!value) return 'Пустое значение не допустимо';
+  if (value === null) return 'Пустое значение не допустимо';
   return trim(value).length > 0;
 };
 
 // IS-STRING checker
 const isStringChecker = (value) => {
-  if (!value) return 'Требуется ввести строковое значение';
+  if (value === null) return 'Требуется ввести строковое значение';
   return typeof value === 'string' && !isNumberChecker(value);
 };
 
 // IS-NUMBER checker
 const isNumberChecker = (value) => {
-  if (!value) return 'Требуется ввести числовое значение';
+  if (value === null) return 'Требуется ввести числовое значение';
   return notEmptyChecker(value) && !isNaN(Number(value));
 };
 
 // ENUM-OF-CURRENCIES checker
 const isCurrencyChecker = (value) => {
-  if (!value) return 'Недопустимая валюта';
+  if (value === null) return 'Недопустимая валюта';
   return CURRENCIES.indexOf(value) !== -1;
+};
+
+// IS-URL checker
+const isUrlChecker = (value) => {
+  if (value === null) return 'невалидный URL';
+  return urlTest.test(value);
 };
 
 // NATURAL-NUMBER checker
 const isNaturalNumberChecker = (value) => {
-  if (!value) return 'Число не может быть дробным или отрицательным';
+  if (value === null) return 'Число не может быть дробным или отрицательным';
   return isNumberChecker(value) && -1 < value && parseInt(value) - parseFloat(value) === 0;
 };
 
 // MIN-LENGTH-N checker
 const minLengthChecker = (value) => {
-  if (!value) return `Минимальная длина поля ${amountToken} символов (без пробелов)`;
+  if (value === null) return `Минимальная длина поля ${amountToken} символов (без пробелов)`;
   if (!amountToken) return notEmptyChecker(value);
   return -1 < value.replace(/\s{2,}/, '').length - amountToken;
 };
@@ -74,6 +84,7 @@ export const VALIDATION_TYPES = {
   isString: 'IS-STRING',
   isNumber: 'IS-NUMBER',
   isCurrency: 'IS-ENUM-OF-CURRENCIES',
+  isURL: 'IS-URL',
   isNaturalNumber: 'IS-NATURAL-NUMBER',
   minLength: (len) => `MIN-LENGTH-${len}`,
 };
@@ -83,6 +94,8 @@ export default function (value, rules) {
     let checkMethod = getCheckMethod(rules[i]);
     if (!checkMethod) continue;
     let isValid = checkMethod(value);
-    if (!isValid) return checkMethod(null); // fail fast with an error message
+    if (!isValid) {
+      return checkMethod(null);
+    } // fail fast with an error message
   }
 }
