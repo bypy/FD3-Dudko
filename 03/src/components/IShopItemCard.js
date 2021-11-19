@@ -34,10 +34,10 @@ export default class IShopItemCard extends React.Component {
   state = {
     id: this.props.cardData.id,
     name: this.props.cardData.name,
-    price: this.props.cardData.price,
+    price: this.props.cardData.price.toString(),
     currency: this.props.cardData.currency,
     url: this.props.cardData.url,
-    quantity: this.props.cardData.quantity,
+    quantity: this.props.cardData.quantity.toString(),
     details: this.props.cardData.details,
     idValidation: null,
     nameValidation: null,
@@ -75,27 +75,32 @@ export default class IShopItemCard extends React.Component {
     this.props.onRecordEditCancelCb();
   };
 
-  checkFormIsValid = () => {
-    let {
-      idValidation,
-      nameValidation,
-      priceValidation,
-      currencyValidation,
-      urlValidation,
-      quantityValidation,
-      detailsValidation,
-    } = this.state;
-    let errors = [
-      idValidation,
-      nameValidation,
-      priceValidation,
-      currencyValidation,
-      urlValidation,
-      quantityValidation,
-      detailsValidation,
-    ].find((error) => error !== null);
-    if (!errors && !this.state.formIsValid) {
+  checkFormIsValidAndChanged = () => {
+    let isFormInvalid =
+      this.state.idValidation !== null ||
+      this.state.nameValidation !== null ||
+      this.state.priceValidation !== null ||
+      this.state.currencyValidation !== null ||
+      this.state.urlValidation !== null ||
+      this.state.quantityValidation !== null ||
+      this.state.detailsValidation !== null;
+
+    if (!isFormInvalid && !this.state.formIsValid) {
+      // update if only form were invalid
       this.setState({ formIsValid: true });
+    }
+
+    if (
+      this.state.name !== this.props.cardData.name ||
+      this.state.price !== this.props.cardData.price.toString() || // String vs. Number
+      this.state.currency !== this.props.cardData.currency ||
+      this.state.url !== this.props.cardData.url ||
+      this.state.quantity !== this.props.cardData.quantity.toString() || // String vs. Number
+      this.state.details !== this.props.cardData.details
+    ) {
+      this.setState({ unsavedChanges: true });
+    } else if (this.state.unsavedChanges) {
+      this.setState({ unsavedChanges: false }); // if we've got the same form stuff after editing
     }
   };
 
@@ -108,33 +113,10 @@ export default class IShopItemCard extends React.Component {
       this.setState({ formIsValid: false });
       this.setState({ [fieldName.concat('Validation')]: validationError });
     } else {
-      this.setState({ [fieldName.concat('Validation')]: null });
+      // check other inputs after state will be updated
+      this.setState({ [fieldName.concat('Validation')]: null }, this.checkFormIsValidAndChanged);
     }
   };
-
-  getCardRow(header, value, errorMessage, editHandler) {
-    return (
-      <div className="row" role="row">
-        <div className="cell" role="cell">
-          {header}
-        </div>
-        <div className="cell" role="cell">
-          {this.props.editMode && (
-            <input
-              className="userDataInput"
-              size={value.toString().length}
-              value={value}
-              onChange={editHandler}
-              onBlur={this.checkFormIsValid}
-            />
-          )}
-          {errorMessage && <span className="errMessage">{errorMessage}</span>}
-
-          {!this.props.editMode && value}
-        </div>
-      </div>
-    );
-  }
 
   getValidationRulesByFieldName(filedName) {
     let rules = [];
@@ -148,6 +130,9 @@ export default class IShopItemCard extends React.Component {
       case 'currency':
         rules = [v.notEmpty, v.isCurrency];
         break;
+      case 'url':
+        rules = [v.notEmpty, v.isURL];
+        break;
       case 'quantity':
         rules = [v.notEmpty, v.isNumber, v.isNaturalNumber];
         break;
@@ -156,6 +141,30 @@ export default class IShopItemCard extends React.Component {
         break;
     }
     return rules;
+  }
+
+  getCardRow(header, value, errorMessage, editHandler) {
+    return (
+      <div className="row" role="row">
+        <div className="cell" role="cell">
+          {header}
+        </div>
+        <div className="cell" role="cell">
+          {this.props.editMode && (
+            <input
+              className="userDataInput"
+              size={value.toString().length || 3} // 3 - default input width for empty content
+              value={value}
+              onChange={editHandler}
+              onBlur={this.checkChanges}
+            />
+          )}
+          {errorMessage && <span className="errMessage">{errorMessage}</span>}
+
+          {!this.props.editMode && value}
+        </div>
+      </div>
+    );
   }
 
   render() {
