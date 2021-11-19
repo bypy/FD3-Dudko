@@ -36,6 +36,7 @@ class IShop extends React.Component {
     selectedRecordData: null,
     shopRecords: this.props.records,
     editMode: false,
+    createMode: false,
     editInProgress: false,
   };
 
@@ -44,18 +45,18 @@ class IShop extends React.Component {
     return filterResult.length > 0 ? filterResult[0] : null;
   }
 
-  setSelectedRecord(itemId) {
+  setSelectedRecordData(itemId) {
     this.setState({ selectedRecord: itemId });
     this.setState({ selectedRecordData: this.getRecordData(itemId) });
   }
 
   changeSelectedRecordCb = (itemId) => {
-    this.setSelectedRecord(itemId);
+    this.setSelectedRecordData(itemId);
     this.setState({ editMode: false });
   };
 
   recordEditCb = (itemId) => {
-    this.setSelectedRecord(itemId);
+    this.setSelectedRecordData(itemId);
     this.setState({ editMode: true });
   };
 
@@ -76,6 +77,11 @@ class IShop extends React.Component {
     this.setState({ shopRecords: updatedShopRecords });
     this.setState({ editMode: false });
     this.setState({ editInProgress: false });
+  };
+
+  addNewRecordCb = () => {
+    this.changeSelectedRecordCb(null); // reuse method to deselect record and drop edit mode
+    this.setState({ createMode: true });
   };
 
   confirmCb = (message) => confirm(message);
@@ -110,11 +116,14 @@ class IShop extends React.Component {
               onRecordDeleteCb={this.recordDeleteCb}
               onConfirmCb={this.confirmCb}
               editMode={this.state.editMode}
+              createMode={this.state.createMode}
               freezeMode={this.state.editInProgress}
             />
           ))}
           <div className="addRecordBtn">
-            <button disabled={this.state.editMode} onClick={this.recordAdd}>{this.props.addBtnText}</button>
+            <button disabled={this.state.editMode || this.state.createMode} onClick={this.addNewRecordCb}>
+              {this.props.addBtnText}
+            </button>
           </div>
         </div>
         {this.state.selectedRecord !== null && this.state.selectedRecordData !== null && (

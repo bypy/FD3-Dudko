@@ -18,22 +18,26 @@ class IShopItem extends React.Component {
     onRecordEditCb: PropTypes.func,
     onConfirmCb: PropTypes.func,
     editMode: PropTypes.bool,
+    createMode: PropTypes.bool,
     freezeMode: PropTypes.bool,
   };
 
   static defaultProps = {
+    editMode: false,
+    createMode: false,
+    freezeMode: false,
     deleteBtnText: 'Удалить',
     editBtnText: 'Редактировать',
     confirmDeletePrompt: 'Удалить запись "%"?',
   };
 
   hasFocusHandler = () => {
-    if (this.props.freezeMode) return;
+    if (this.props.freezeMode || this.props.createMode) return;
     if (this.props.onHasFocusCb) this.props.onHasFocusCb(this.props.id);
   };
 
   deleteRecordHandler = (EO) => {
-    if (this.props.editMode) return;
+    if (this.props.editMode || this.props.createMode) return;
     EO.stopPropagation(); // do not select record during delete process
     EO.preventDefault();
     const promptMessage = this.props.confirmDeletePrompt.replace('%', this.props.name);
@@ -43,7 +47,7 @@ class IShopItem extends React.Component {
   };
 
   editRecordHandler = (EO) => {
-    if (this.props.freezeMode) return;
+    if (this.props.freezeMode || this.props.createMode) return;
     EO.stopPropagation(); // we do not want to onFocus event to be fired
     EO.preventDefault();
     if (this.props.onRecordEditCb) this.props.onRecordEditCb(this.props.id);
@@ -78,10 +82,18 @@ class IShopItem extends React.Component {
           {this.props.details}
         </div>
         <div className="cell column" role="table">
-          <button className="actionBtn" disabled={this.props.freezeMode} onClick={this.editRecordHandler}>
+          <button
+            className="actionBtn"
+            disabled={this.props.freezeMode || this.props.createMode}
+            onClick={this.editRecordHandler}
+          >
             {this.props.editBtnText}
           </button>
-          <button className="actionBtn" disabled={this.props.editMode} onClick={this.deleteRecordHandler}>
+          <button
+            className="actionBtn"
+            disabled={this.props.editMode || this.props.createMode}
+            onClick={this.deleteRecordHandler}
+          >
             {this.props.deleteBtnText}
           </button>
         </div>
