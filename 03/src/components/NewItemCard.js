@@ -1,23 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { VALIDATION_TYPES as v } from './../utils/validator';
+import { VALIDATION_TYPES as v } from '../utils/validator';
 
 import './IShopItemCard.scss';
 
-export default class IShopItemCard extends React.Component {
+export default class NewItemCard extends React.Component {
   static propTypes = {
+    id: PropTypes.number.isRequired,
     headline: PropTypes.array.isRequired,
-    cardData: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-      currency: PropTypes.string.isRequired,
-      url: PropTypes.string.isRequired,
-      quantity: PropTypes.number.isRequired,
-      details: PropTypes.string.isRequired,
-    }),
-    editRecordMode: PropTypes.bool,
     onEditInProgressCb: PropTypes.func,
     onEditCancelCb: PropTypes.func,
     onSaveRecordCb: PropTypes.func,
@@ -25,27 +16,25 @@ export default class IShopItemCard extends React.Component {
   };
 
   static defaultProps = {
-    editRecordMode: false, // false-view mode; true-edit mode
     saveBtnText: 'Сохранить',
     cancelBtnText: 'Отмена',
   };
 
   state = {
-    id: this.props.cardData.id,
-    name: this.props.cardData.name,
-    price: this.props.cardData.price.toString(),
-    currency: this.props.cardData.currency,
-    url: this.props.cardData.url,
-    quantity: this.props.cardData.quantity.toString(),
-    details: this.props.cardData.details,
-    idValidation: null,
-    nameValidation: null,
-    priceValidation: null,
-    currencyValidation: null,
-    urlValidation: null,
-    quantityValidation: null,
-    detailsValidation: null,
-    formIsValid: true,
+    id: this.props.id,
+    name: '',
+    price: '',
+    currency: '',
+    url: '',
+    quantity: '',
+    details: '',
+    nameValidation: 'Пустое значение не допустимо',
+    priceValidation: 'Пустое значение не допустимо',
+    currencyValidation: 'Пустое значение не допустимо',
+    urlValidation: 'Пустое значение не допустимо',
+    quantityValidation: 'Пустое значение не допустимо',
+    detailsValidation: 'Пустое значение не допустимо',
+    formIsValid: false,
     unsavedChanges: false,
   };
 
@@ -66,15 +55,15 @@ export default class IShopItemCard extends React.Component {
     }
   };
 
-  editRecordCancelHandler = () => {
+  createRecordCancelHandler = () => {
     this.setState({
-      id: this.props.cardData.id,
-      name: this.props.cardData.name,
-      price: this.props.cardData.price.toString(),
-      currency: this.props.cardData.currency,
-      url: this.props.cardData.url,
-      quantity: this.props.cardData.quantity.toString(),
-      details: this.props.cardData.details,
+      id: this.props.id,
+      name: '',
+      price: '',
+      currency: '',
+      url: '',
+      quantity: '',
+      details: '',
       nameValidation: null,
       priceValidation: null,
       currencyValidation: null,
@@ -84,13 +73,13 @@ export default class IShopItemCard extends React.Component {
       formIsValid: true,
       unsavedChanges: false,
     });
-    if (this.props.onEditCancelCb) this.props.onEditCancelCb(this.state.id);
+    if (this.props.onEditCancelCb) this.props.onEditCancelCb(null);
   };
 
-  userInputHandler = (EO, fieldName) => {
+  userInputHandler = (fieldValue, fieldName) => {
     this.setState({ unsavedChanges: true });
-    this.setState({ [fieldName]: EO.target.value });
-    let validationError = this.props.validator(EO.target.value, this.getValidationRulesByFieldName(fieldName));
+    this.setState({ [fieldName]: fieldValue });
+    let validationError = this.props.validator(fieldValue, this.getValidationRulesByFieldName(fieldName));
     if (validationError) {
       this.setState({ formIsValid: false });
       this.setState({ [fieldName.concat('Validation')]: validationError });
@@ -121,12 +110,12 @@ export default class IShopItemCard extends React.Component {
     }
 
     if (
-      this.state.name !== this.props.cardData.name ||
-      this.state.price !== this.props.cardData.price.toString() || // String vs. Number
-      this.state.currency !== this.props.cardData.currency ||
-      this.state.url !== this.props.cardData.url ||
-      this.state.quantity !== this.props.cardData.quantity.toString() || // String vs. Number
-      this.state.details !== this.props.cardData.details
+      this.state.name !== '' ||
+      this.state.price !== '' ||
+      this.state.currency !== '' ||
+      this.state.url !== '' ||
+      this.state.quantity !== '' ||
+      this.state.details !== ''
     ) {
       this.setState({ unsavedChanges: true }, this.editProgressHandler);
     } else if (this.state.unsavedChanges) {
@@ -134,7 +123,7 @@ export default class IShopItemCard extends React.Component {
     }
   };
 
-  getValidationRulesByFieldName(filedName) {
+  getValidationRulesByFieldName = (filedName) => {
     let rules = [];
     switch (filedName) {
       case 'name':
@@ -157,7 +146,7 @@ export default class IShopItemCard extends React.Component {
         break;
     }
     return rules;
-  }
+  };
 
   getCardRow(header, value, errorMessage, editHandler) {
     return (
@@ -166,17 +155,8 @@ export default class IShopItemCard extends React.Component {
           {header}
         </div>
         <div className="cell" role="cell">
-          {this.props.editRecordMode && (
-            <input
-              className="userDataInput"
-              size={value.toString().length || 3} // 3 - default input width for empty content
-              value={value}
-              onChange={editHandler}
-            />
-          )}
+          <input className="userDataInput" size={value.toString().length} value={value} onChange={editHandler} />
           {errorMessage && <span className="errMessage">{errorMessage}</span>}
-
-          {!this.props.editRecordMode && value}
         </div>
       </div>
     );
@@ -184,45 +164,43 @@ export default class IShopItemCard extends React.Component {
 
   render() {
     return (
-      <div className="IShopItemCard" role="table" data-id={'# ' + this.state.id}>
+      <div className="NewItemCard" role="table" data-id={'# ' + this.state.id}>
         {this.getCardRow(this.props.headline[0], this.state.name, this.state.nameValidation, (EO) =>
-          this.userInputHandler(EO, 'name')
+          this.userInputHandler(EO.target.value, 'name')
         )}
         {this.getCardRow(this.props.headline[1], this.state.price, this.state.priceValidation, (EO) =>
-          this.userInputHandler(EO, 'price')
+          this.userInputHandler(EO.target.value, 'price')
         )}
         {this.getCardRow(this.props.headline[2], this.state.currency, this.state.currencyValidation, (EO) =>
-          this.userInputHandler(EO, 'currency')
+          this.userInputHandler(EO.target.value, 'currency')
         )}
         {this.getCardRow(this.props.headline[3], this.state.url, this.state.urlValidation, (EO) =>
-          this.userInputHandler(EO, 'url')
+          this.userInputHandler(EO.target.value, 'url')
         )}
         {this.getCardRow(this.props.headline[4], this.state.quantity, this.state.quantityValidation, (EO) =>
-          this.userInputHandler(EO, 'quantity')
+          this.userInputHandler(EO.target.value, 'quantity')
         )}
         {this.getCardRow(this.props.headline[5], this.state.details, this.state.detailsValidation, (EO) =>
-          this.userInputHandler(EO, 'details')
+          this.userInputHandler(EO.target.value, 'details')
         )}
 
-        {this.props.editRecordMode && (
-          <div className="row" role="row">
-            <div className="cell" role="cell">
-              {this.props.headline[6]}
-            </div>
-            <div className="cell button-cell" role="cell">
-              <button
-                className="actionBtn"
-                disabled={!(this.state.formIsValid && this.state.unsavedChanges)}
-                onClick={this.saveRecordHandler}
-              >
-                {this.props.saveBtnText}
-              </button>
-              <button className="actionBtn" onClick={this.editRecordCancelHandler}>
-                {this.props.cancelBtnText}
-              </button>
-            </div>
+        <div className="row" role="row">
+          <div className="cell" role="cell">
+            {this.props.headline[6]}
           </div>
-        )}
+          <div className="cell button-cell" role="cell">
+            <button
+              className="actionBtn"
+              disabled={!(this.state.formIsValid && this.state.unsavedChanges)}
+              onClick={this.saveRecordHandler}
+            >
+              {this.props.saveBtnText}
+            </button>
+            <button className="actionBtn" onClick={this.createRecordCancelHandler}>
+              {this.props.cancelBtnText}
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

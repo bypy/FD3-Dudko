@@ -8,7 +8,8 @@ $bg-stripe-color: #e9e9ed;
 $header-text-color: black;
 $header-font-size: 1rem;
 
-.IShopItemCard {
+.IShopItemCard,
+.NewItemCard {
 
   box-sizing: border-box;
 
@@ -96,7 +97,8 @@ $header-font-size: 1rem;
 
 @media all and (max-width: 767px) {
 
-  .IShopItemCard {
+  .IShopItemCard,
+  .NewItemCard {
     .cardHeader {
       .cell {
         font-size: math.div($header-font-size * 3, 4);

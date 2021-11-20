@@ -6,6 +6,7 @@ import './IShop.scss';
 
 import IShopItem from './IShopItem';
 import IShopItemCard from './IShopItemCard';
+import NewItemCard from './NewItemCard';
 
 class IShop extends React.Component {
   static propTypes = {
@@ -38,6 +39,7 @@ class IShop extends React.Component {
     editMode: false,
     createMode: false,
     editInProgress: false,
+    nextId: this.props.records.length + 1,
   };
 
   getRecordData(id) {
@@ -48,6 +50,14 @@ class IShop extends React.Component {
   setSelectedRecordData(itemId) {
     this.setState({ selectedRecord: itemId });
     this.setState({ selectedRecordData: this.getRecordData(itemId) });
+  }
+
+  updateNextId() {
+    let lastId = this.state.shopRecords.length;
+    this.state.shopRecords.forEach((rec) => {
+      if (lastId < rec.id) lastId = rec.id;
+    });
+    this.setState({ nextId: lastId + 1 });
   }
 
   changeSelectedRecordCb = (itemId) => {
@@ -61,7 +71,7 @@ class IShop extends React.Component {
   };
 
   recordDeleteCb = (itemId) => {
-    this.setState({ shopRecords: this.state.shopRecords.filter((rec) => rec.id !== itemId) });
+    this.setState({ shopRecords: this.state.shopRecords.filter((rec) => rec.id !== itemId) }, this.updateNextId);
     this.setState({ editMode: false });
   };
 
@@ -70,17 +80,20 @@ class IShop extends React.Component {
   };
 
   editCancelCb = (itemId) => {
-    this.setState({ editMode: false, selectedRecord: itemId });
+    this.setState({ editInProgress: false, editMode: false, createMode: false, selectedRecord: itemId });
   };
 
   saveRecordCb = (editedCardData) => {
+    let isNewCard = true;
     let updatedShopRecords = this.state.shopRecords.map((cardData) => {
-      if (cardData.id === editedCardData.id) return editedCardData;
-      else return cardData;
+      if (cardData.id === editedCardData.id) {
+        isNewCard = false;
+        return editedCardData;
+      } else return cardData;
     });
-    this.setState({ shopRecords: updatedShopRecords });
-    this.setState({ editMode: false });
-    this.setState({ editInProgress: false });
+    if (isNewCard) updatedShopRecords.push(editedCardData);
+    if (this.state.createMode) this.setState({ createMode: false });
+    this.setState({ shopRecords: updatedShopRecords, editMode: false, editInProgress: false }, this.updateNextId);
   };
 
   addNewRecordCb = () => {
@@ -130,13 +143,22 @@ class IShop extends React.Component {
             </button>
           </div>
         </div>
-        {this.state.selectedRecord !== null && this.state.selectedRecordData !== null && (
+        {!this.state.createMode && this.state.selectedRecord !== null && this.state.selectedRecordData !== null && (
           <IShopItemCard
             key={this.state.selectedRecordData.id}
             headline={this.props.headline}
             cardData={this.state.selectedRecordData}
             editRecordMode={this.state.editMode}
-            createMode={this.state.createMode}
+            onEditInProgressCb={this.editInProgressCb}
+            onEditCancelCb={this.editCancelCb}
+            onSaveRecordCb={this.saveRecordCb}
+            validator={this.props.validator}
+          />
+        )}
+        {this.state.createMode && (
+          <NewItemCard
+            id={this.state.nextId}
+            headline={this.props.headline}
             onEditInProgressCb={this.editInProgressCb}
             onEditCancelCb={this.editCancelCb}
             onSaveRecordCb={this.saveRecordCb}
