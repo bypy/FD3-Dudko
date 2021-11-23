@@ -5,7 +5,7 @@ const RainbowFrame = (props) => {
   return (
     <div
       style={{
-        border: '12px solid ' + props.colors.pop(),
+        border: '12px solid ' + props.colors.pop(), // Кажется, в этом случае можно :)
         padding: '10px',
         maxWidth: '800px',
         fontSize: '2rem',
