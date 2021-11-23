@@ -9,12 +9,11 @@ const servePage = 'index.html';
 module.exports = {
   entry: './src/App.js',
   output: {
-    // filename: 'bundle.[contenthash].js',
-    filename: 'bundle.js',
+    filename: process.env.NODE_ENV === 'production' ? 'bundle.[contenthash].js' : 'bundle.js',
     path: path.resolve(__dirname, 'dist', 'public'),
     clean: true,
   },
-  mode: 'development',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   devtool: 'source-map',
   devServer: {
     static: {
@@ -59,13 +58,12 @@ module.exports = {
     ],
   },
   optimization: {
-    minimize: false,
+    minimize: process.env.NODE_ENV === 'production',
     minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   plugins: [
     new MiniCssExtractPlugin({
-      // filename: 'styles.[contenthash].css',
-      filename: 'styles.css',
+      filename: process.env.NODE_ENV === 'production' ? 'styles.[contenthash].css' : 'styles.css',
     }),
     new HtmlWebpackPlugin({
       filename: `${servePage}`,
