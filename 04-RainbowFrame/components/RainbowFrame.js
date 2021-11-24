@@ -5,7 +5,8 @@ const RainbowFrame = (props) => {
   return (
     <div
       style={{
-        border: '12px solid ' + props.colors.pop(), // Кажется, в этом случае можно :)
+        // props.colors.pop() короче, но пропсы менять нельзя
+        border: props.colors.length > 0 && '12px solid ' + props.colors.slice(props.colors.length - 1),
         padding: '10px',
         maxWidth: '800px',
         fontSize: '2rem',
@@ -14,7 +15,11 @@ const RainbowFrame = (props) => {
         textAlign: 'center',
       }}
     >
-      {props.colors.length > 0 ? <RainbowFrame colors={props.colors}>{props.children}</RainbowFrame> : props.children}
+      {props.colors.length > 0 ? (
+        <RainbowFrame colors={props.colors.slice(0, props.colors.length - 1)}>{props.children}</RainbowFrame>
+      ) : (
+        props.children
+      )}
     </div>
   );
 };
