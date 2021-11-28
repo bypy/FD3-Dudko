@@ -7,9 +7,7 @@ const BR2JSX = (props) => {
     .split(/<br\s*\/?>/gi)
     .forEach((txtLine, index) => {
       index > 0 && paragraph.push(<br key={index}/>);
-      paragraph.push(<i key={"i"+index}>);
       paragraph.push(txtLine);
-      paragraph.push(</i>);
     });
   return (
     <div style={{ width: '226px', height: 'auto', margin: '0 auto', backgroundColor: '#2f4f4f', color: 'white', padding: '40px 0', fontSize: '2rem', fontFamily: 'serif', textAlign: 'center' }}
