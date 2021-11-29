@@ -10,17 +10,15 @@ const DoubleButton = ({ caption1, caption2, cbPressed, children }) => {
         name="first"
         value={caption1}
         onClick={(EO) => cbPressed && cbPressed(EO.target.value)}
-        style={{ fontSize: "1.5rem"}}
+        style={{ fontSize: "1.5rem", marginRight: "1ex"}}
       />
-      &nbsp;
       {children}
-      &nbsp;
       <input
         type="button"
         name="second"
         value={caption2}
         onClick={(EO) => cbPressed && cbPressed(EO.target.value)}
-        style={{ fontSize: "1.5rem"}}
+        style={{ fontSize: "1.5rem", marginLeft: "1ex"}}
       />
     </Fragment>
   );
