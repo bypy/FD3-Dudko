@@ -9,7 +9,7 @@ const DoubleButton = ({ caption1, caption2, cbPressed, children }) => {
         type="button"
         name="first"
         value={caption1}
-        onClick={(EO) => cbPressed(EO.target.value)}
+        onClick={(EO) => cbPressed && cbPressed(EO.target.value)}
         style={{ fontSize: "1.5rem"}}
       />
       &nbsp;
@@ -19,7 +19,7 @@ const DoubleButton = ({ caption1, caption2, cbPressed, children }) => {
         type="button"
         name="second"
         value={caption2}
-        onClick={(EO) => cbPressed(EO.target.value)}
+        onClick={(EO) => cbPressed && cbPressed(EO.target.value)}
         style={{ fontSize: "1.5rem"}}
       />
     </Fragment>
