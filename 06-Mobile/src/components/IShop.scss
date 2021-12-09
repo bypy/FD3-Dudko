@@ -1,0 +1,145 @@
+@use "sass:math";
+
+$bg-table: white;
+$bg-header: #e9e9ed;
+$header-cells-count: 7;
+$header-text-color: black;
+$header-font-size: 1rem;
+$table-border-color: darkslategray;
+$table-outer-border-width: 2px;
+$table-inner-border-width: 1px;
+$border-inner: solid $table-inner-border-width $table-border-color;
+$border-outer: solid $table-outer-border-width $table-border-color;
+
+
+.IShop {
+
+  box-sizing: border-box;
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  background: $bg-table;
+  border: $border-outer;
+
+
+  .caption {
+    height: 3em;
+    background-color: $bg-header;
+    border-bottom: $border-outer;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .headerWrapper {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: $bg-header;
+    border-bottom: $border-outer;
+  }
+
+  .iShopHeader {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    word-wrap: normal;
+    line-height: 100%;
+
+    .cell {
+      width: calc(100% / #{$header-cells-count});
+      padding: 0.5em 0.5em;
+      border-right: $border-inner;
+      color: $header-text-color;
+      text-align: center;
+      word-wrap: break-word;
+      word-break: break-all;
+      overflow-x: hidden;
+      font-size: $header-font-size;
+
+      &:last-child {
+        border-right: 0;
+      }
+    }
+
+  }
+
+  .addRecordBtn {
+    background: $bg-header;
+    border-top: $border-inner;
+    padding: 1em 0;
+    text-align: center;
+
+    button {
+      padding: 5px 10px;
+      font-size: inherit;
+      font-family: inherit;
+    }
+  }
+
+}
+
+@media all and (max-width: 767px) {
+  .IShop {
+
+    .caption {
+      font-size: math.div($header-font-size * 3, 4);
+    }
+
+    .iShopHeader {
+      min-height: 70px;
+      align-items: normal;
+
+      .cell {
+        width: calc(100% / #{$header-cells-count - 1});
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        padding: 0.25em 0.25em;
+        font-size: math.div($header-font-size * 3, 4);
+
+        &.first {
+          width: 100%;
+          border-right: 0;
+          border-bottom: solid $table-inner-border-width $table-border-color;
+        }
+      }
+    }
+  }
+}
+
+@media all and (max-width: 430px) {
+
+  .IShop {
+
+    .iShopHeader {
+      counter-reset: property-number;
+      min-height: 140px;
+
+      .cell {
+        display: flex;
+        flex-flow: row nowrap;
+        width: 100%;
+        border-right: 0;
+        counter-increment: property-number;
+
+        &::before {
+          content: counter(property-number)". ";
+          margin-right: 2ex;
+          color: dimgray;
+          font-size: 0.75em;
+          transform: translateY(2px);
+        }
+        &.first {
+          border-bottom: 0;
+        }
+      }
+
+    }
+
+  }
+
+}
+

@@ -1,0 +1,30 @@
+[
+  {
+    "lastName": "Иванов",
+    "firstName": "Иван",
+    "surName": "Иванович",
+    "balance": 200,
+    "status": "active"
+  },
+  {
+    "lastName": "Сидоров",
+    "firstName": "Сидор",
+    "surName": "Сидорович",
+    "balance": 250,
+    "status": "active"
+  },
+  {
+    "lastName": "Петров",
+    "firstName": "Петр",
+    "surName": "Петрович",
+    "balance": 180,
+    "status": "active"
+  },
+  {
+    "lastName": "Григорьев",
+    "firstName": "Григорий",
+    "surName": "Григорьевич",
+    "balance": -220,
+    "status": "blocked"
+  }
+]
