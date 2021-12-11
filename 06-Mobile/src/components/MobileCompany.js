@@ -50,8 +50,7 @@ export default class MobileCompany extends React.Component {
     subscribers: this.props.subscribers.map((subscriber) => {
       let id = (subscriber.lastName + subscriber.firstName + subscriber.surName)
         .split('')
-        .map((n) => n.codePointAt(0))
-        .join('');
+        .reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
       subscriber.id = id;
       return <Subscriber key={id} data={subscriber} />;
     }),
