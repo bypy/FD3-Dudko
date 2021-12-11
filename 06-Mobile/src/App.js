@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 
 import '../public/page.css';
 import MobileCompany from './components/MobileCompany';
-import Subscriber from './components/Subscriber';
 
 const subscribers = require('./data/subscribers.json').map((subscriber) => {
   // hashing FIO
@@ -13,7 +12,7 @@ const subscribers = require('./data/subscribers.json').map((subscriber) => {
 
 ReactDOM.render(
   <div className="container">
-    <MobileCompany subscribers={require('./data/subscribers.json')} loggerMode="debug" />
+    <MobileCompany subscribers={subscribers} loggerMode="debug" />
   </div>,
   document.getElementById('root')
 );
