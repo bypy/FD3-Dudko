@@ -64,12 +64,10 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
     }
 
     .actionBtn {
-      max-width: 20ex;
+      display: flex;
+      align-self: center;
+      padding: 0 1ex;
       font-family: inherit;
-    }
-
-    .actionBtn:last-child {
-      margin-top: .5em;
     }
 
     &.column {

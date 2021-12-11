@@ -2,13 +2,19 @@ import React from 'react';
 import { Fragment } from 'react';
 import { PropTypes } from 'prop-types';
 
+import { eventBus } from './eventBus';
+import { LIFECYCLE_EVENT, RENDER_EVENT, FILTER_CHANGE, ITEM_CLICKED } from './eventsAvailable';
+import { LOG_MODE } from './logModes';
+
+import StatusFilter from './StatusFilter';
 import Subscriber from './Subscriber';
 
 import './IShop.scss';
 import './IShopItem.scss';
 
-export default class MobileCompany extends React.Component {
+export default class MobileCompany extends React.PureComponent {
   static propTypes = {
+    company: PropTypes.string.isRequired,
     subscribers: PropTypes.arrayOf(
       PropTypes.shape({
         lastName: PropTypes.string.isRequired,
@@ -20,24 +26,14 @@ export default class MobileCompany extends React.Component {
     ).isRequired,
     loggerMode: PropTypes.string,
     classname: PropTypes.string,
+    header: PropTypes.array, // have to declare for PureComponent
   };
 
   static defaultProps = {
-    btn: {
-      company1: 'A1',
-      company2: 'MTS',
-      all: 'Все',
-      active: 'Активные',
-      blocked: 'Заблокированные',
-      edit: 'Редактировать',
-      delete: 'Удалить',
-      add: 'Добавить клиента',
-    },
-    // header: ['Фамилия', 'Имя', 'Отчество', 'Баланс', 'Статус', 'Редактировать', 'Удалить'],
     header: Array.prototype.map.call(
       ['Фамилия', 'Имя', 'Отчество', 'Баланс', 'Статус', 'Редактировать', 'Удалить'],
       (property, index) => (
-        <div key={index} className={index === 0 ? 'cell first' : 'cell'} role="columnheader">
+        <div key={index} className={index === 0 ? 'cell first' : 'cell'}>
           {property}
         </div>
       )
@@ -47,23 +43,52 @@ export default class MobileCompany extends React.Component {
   };
 
   state = {
-    subscribers: this.props.subscribers.map((subscriber) => <Subscriber key={subscriber.id} data={subscriber} />),
+    currentFilter: '0', // 0-all, 1-active, 2-blocked
+    subscribers: this.props.subscribers,
+    selectedSubscriber: null,
+    isEditMode: false,
   };
 
-  componentWillMount() {
-
+  componentDidMount() {
+    eventBus.addListener(FILTER_CHANGE, this.setFilter);
+    eventBus.addListener(ITEM_CLICKED, this.setSelected);
   }
 
+  componentWillUnmount() {
+    eventBus.removeListener(FILTER_CHANGE);
+    eventBus.removeListener(ITEM_CLICKED);
+  }
+
+  setFilter = (btnName) => {
+    this.setState({ currentFilter: btnName });
+  };
+
+  setSelected = (id) => {
+    this.setState({ selectedSubscriber: id });
+  };
+
   render() {
+    eventBus.emit(RENDER_EVENT, `${this.constructor.name} component RENDER`);
     return (
       <Fragment>
+        <span>{`Компания: ${this.props.company}`}</span>
+        <hr />
+        <StatusFilter currentFilter={this.state.currentFilter} />
+        <hr />
         <div className={this.props.classname} role="table">
           <div className="headerWrapper">
             <div className="iShopHeader" role="row">
               {this.props.header}
             </div>
           </div>
-          {this.state.subscribers}
+          {this.state.subscribers.map((subscriber) => (
+            <Subscriber
+              key={subscriber.id}
+              data={subscriber}
+              selectedSubscriber={this.state.selectedSubscriber}
+              isEditMode={this.state.isEditMode}
+            />
+          ))}
         </div>
       </Fragment>
     );
