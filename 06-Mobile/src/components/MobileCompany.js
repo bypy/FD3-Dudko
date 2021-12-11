@@ -47,10 +47,15 @@ export default class MobileCompany extends React.Component {
   };
 
   state = {
-    subscribers: this.props.subscribers,
+    subscribers: this.props.subscribers.map((subscriber) => {
+      let id = (subscriber.lastName + subscriber.firstName + subscriber.surName)
+        .split('')
+        .map((n) => n.codePointAt(0))
+        .join('');
+      subscriber.id = id;
+      return <Subscriber key={id} data={subscriber} />;
+    }),
   };
-
-  getIdByFullName = (fio) => fio.map((n) => n.codePointAt(0)).join();
 
   render() {
     return (
@@ -61,12 +66,7 @@ export default class MobileCompany extends React.Component {
               {this.props.header}
             </div>
           </div>
-          {this.state.subscribers.map((subscriber) => (
-            <Subscriber
-              key={this.getIdByFullName([subscriber.lastName, subscriber.firstName, subscriber.surName])}
-              data={subscriber}
-            />
-          ))}
+          {this.state.subscribers}
         </div>
       </Fragment>
     );
