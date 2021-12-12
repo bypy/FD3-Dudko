@@ -31,6 +31,10 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
   &.selected {
     background-color: $selected-item-bg-color;
 
+    .customerId {
+      color: white !important;
+    }
+
     .cell.first {
       background-color: $selected-item-bg-color;
     }
@@ -41,14 +45,14 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
     padding: 0.5em 0.5em;
     border-right: $border;
     color: $item-text-color;
-
     text-align: center; // horizontal align
     word-wrap: break-word;
     word-break: break-all;
     overflow-x: hidden;
     display: flex;
-    flex-direction: column;
-    justify-content: center; // vertical align
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 
     &.left-align {
       text-align: left;
@@ -59,6 +63,7 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
     }
 
     &.first {
+      justify-content: space-between;
       background: $bg-table;
       z-index: 11;
     }
@@ -73,6 +78,15 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
       align-self: center;
       padding: 0 1ex;
       font-family: inherit;
+    }
+
+    .userDataInput {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .customerId {
+      color: darkgrey;
     }
 
     &.column {

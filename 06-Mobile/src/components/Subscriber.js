@@ -4,9 +4,9 @@ import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { eventBus } from './eventBus';
-import { RENDER_EVENT, ITEM_CLICKED } from './eventsAvailable';
+import { LIFECYCLE_EVENT, RENDER_EVENT, ITEM_CLICKED, ITEM_EDIT, EDIT_COMPLETE, ITEM_DELETE } from './eventsAvailable';
+import { concatAndHash, newSubscriberTempId } from './utils';
 import './Subscriber.scss';
-import { LOG_MODE } from './logModes';
 
 export default class Subscriber extends React.PureComponent {
   static propTypes = {
@@ -17,131 +17,128 @@ export default class Subscriber extends React.PureComponent {
       surName: PropTypes.string.isRequired,
       balance: PropTypes.number.isRequired,
     }), // is null in add subscriber mode
-    selectedSubscriber: PropTypes.number,
-    currentFilter: PropTypes.number,
-    isEditMode: PropTypes.bool,
+    editedSubscriber: PropTypes.number,
     btn: PropTypes.shape({}),
-    status: PropTypes.shape({}),
   };
 
   static defaultProps = {
-    isEditMode: false,
-    selectedSubscriber: null,
-    currentFilter: 0,
-    status: {
-      active: {
-        name: 'active',
-        code: 1,
-      },
-      blocked: {
-        name: 'blocked',
-        code: 2,
-      },
-    },
+    editedSubscriber: null,
     btn: {
       edit: 'Редактировать',
       delete: 'Удалить',
-      add: 'Добавить клиента',
     },
   };
 
-  state = {
-    ...this.props.data,
-    isEditMode: this.props.isEditMode,
-    // currentFilter: this.props.currentFilter,
-    status: 0 > this.props.data.balance ? this.props.status.blocked.code : this.props.status.active.code,
-  };
+  state = {};
 
-  // static getDerivedStateFromProps(props, state) {
-  //   eventBus.emit(
-  //     LIFECYCLE_EVENT,
-  //     `${LOG_MODE.DEBUG}: getDerivedStateFromProps from Subscriber id=${props.data.id} component`
-  //   );
-  //   return {
-  //     status: 0 > props.data.balance ? props.status.blocked.code : props.status.active.code, // 1-active, 2-blocked
-  //     underFocus: !state.underFocus && props.data.id === props.selectedSubscriber, // current customer have just got selection
-  //     offFocus: state.underFocus && props.selectedSubscriber !== state.id, // current customer have just lost selection
-  //   };
-  // }
+  static getDerivedStateFromProps(props, state) {
+    eventBus.emit(LIFECYCLE_EVENT, `getDerivedStateFromProps from Subscriber id=${props.data.id} component`);
+    return {
+      isEditMode: props.editedSubscriber === props.data.id,
+      isBlocked: props.data.balance < 0,
+    };
+  }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   let gotFocus = !this.state.underFocus && nextProps.data.id === nextProps.selectedSubscriber;
-  //   let lostFocus = this.state.underFocus && nextProps.data.id !== props.selectedSubscriber;
-  //   return gotFocus || lostFocus;
-  // }
-
-  clicked = () => {
+  clickedOutside = () => {
+    if (this.props.data.id === this.state.editedSubscriber) return;
     eventBus.emit(ITEM_CLICKED, this.props.data.id);
+    this.updateSubscriberData();
   };
 
-  getStatusNameByCode = (statusCode) =>
-    statusCode === this.props.status.blocked.code ? this.props.status.blocked.name : this.props.status.active.name;
+  editRecord = (EO) => {
+    EO.stopPropagation();
+    eventBus.emit(ITEM_EDIT, this.props.data.id);
+  };
+
+  deleteRecord = () => {
+    if (confirm(`Удаляем абонента ${this.props.data.firstName} c #${this.props.data.id}?`)) {
+      eventBus.emit(ITEM_DELETE, this.props.data.id);
+    }
+  };
+
+  updateSubscriberData = () => {};
+
+  setLastNameRef = (ref) => {
+    this.lastNameRef = ref;
+  };
+  setFirstNameRef = (ref) => {
+    this.firstNameRef = ref;
+  };
+  setSurNameRef = (ref) => {
+    this.surNameRef = ref;
+  };
+
+  getStatusNameByCode = (isBlocked) => (isBlocked ? 'blocked' : 'active');
 
   render() {
     eventBus.emit(RENDER_EVENT, `${this.constructor.name} id=${this.props.data.id} component RENDER`);
     return (
-      (this.props.currentFilter === 0 || this.props.currentFilter === this.state.status) && (
-        <div
-          className={this.props.selectedSubscriber === this.props.data.id ? 'Subscriber selected' : 'Subscriber'}
-          role="row"
-          onClick={this.clicked}
-        >
-          <div className="cell first left-align" role="cell">
-            {this.props.isEditMode && (
+      <div className="Subscriber" role="row" onClick={this.clickedOutside}>
+        <div className="cell first left-align" role="cell">
+          {this.state.isEditMode && (
+            <Fragment>
               <input
                 className="userDataInput"
-                size={this.state.lastName.toString().length || 3} // 3 - default input width for empty content
-                defaultValue={this.state.lastName}
+                size={this.props.data.lastName.toString().length || 3} // 3 - default input width for empty content
+                defaultValue={this.props.data.lastName}
+                ref={this.setLastNameRef}
               />
-            )}
-            {!this.props.isEditMode && (
-              <Fragment>
-                {this.state.lastName}
-                <span className="customerId">ID: {this.state.id}</span>
-              </Fragment>
-            )}
-          </div>
-          <div className="cell left-align" role="cell">
-            {this.props.isEditMode && (
-              <input
-                className="userDataInput"
-                size={this.state.lastName.toString().length || 3} // 3 - default input width for empty content
-                defaultValue={this.state.firstName}
-              />
-            )}
-            {!this.props.isEditMode && this.state.firstName}
-          </div>
-          <div className="cell left-align" role="cell">
-            {this.props.isEditMode && (
-              <input
-                className="userDataInput"
-                size={this.state.lastName.toString().length || 3} // 3 - default input width for empty content
-                defaultValue={this.state.surName}
-              />
-            )}
-            {!this.props.isEditMode && this.state.surName}
-          </div>
-          <div className="cell" role="cell">
-            {this.props.isEditMode && (
-              <input
-                className="userDataInput"
-                size={this.state.lastName.toString().length || 3} // 3 - default input width for empty content
-                defaultValue={this.state.balance}
-              />
-            )}
-            {!this.props.isEditMode && this.state.balance}
-          </div>
-          <div className={this.state.status === this.props.status.blocked.code ? 'cell blocked' : 'cell'} role="cell">
-            {this.getStatusNameByCode(this.state.status)}
-          </div>
-          <div className="cell" role="cell">
-            <button className="actionBtn">{this.props.btn.edit}</button>
-          </div>
-          <div className="cell" role="cell">
-            <button className="actionBtn">{this.props.btn.delete}</button>
-          </div>
+              <span className="customerId">ID: {this.props.data.id}</span>
+            </Fragment>
+          )}
+          {!this.state.isEditMode && (
+            <Fragment>
+              <span>{this.props.data.lastName}</span>
+              <span className="customerId">ID: {this.props.data.id}</span>
+            </Fragment>
+          )}
         </div>
-      )
+        <div className="cell left-align" role="cell">
+          {this.state.isEditMode && (
+            <input
+              className="userDataInput"
+              size={this.props.data.firstName.toString().length || 3} // 3 - default input width for empty content
+              defaultValue={this.props.data.firstName}
+              ref={this.setFirstNameRef}
+            />
+          )}
+          {!this.state.isEditMode && this.props.data.firstName}
+        </div>
+        <div className="cell left-align" role="cell">
+          {this.state.isEditMode && (
+            <input
+              className="userDataInput"
+              size={this.props.data.surName.toString().length || 3} // 3 - default input width for empty content
+              defaultValue={this.props.data.surName}
+              ref={this.setSurNameRef}
+            />
+          )}
+          {!this.state.isEditMode && this.props.data.surName}
+        </div>
+        <div className="cell" role="cell">
+          {this.state.isEditMode && (
+            <input
+              className="userDataInput"
+              size={this.props.data.balance.toString().length || 3} // 3 - default input width for empty content
+              defaultValue={this.props.data.balance}
+            />
+          )}
+          {!this.state.isEditMode && this.props.data.balance}
+        </div>
+        <div className={this.state.isBlocked ? 'cell blocked' : 'cell'} role="cell">
+          {this.getStatusNameByCode(this.state.isBlocked)}
+        </div>
+        <div className="cell" role="cell">
+          <button className="actionBtn" onClick={this.editRecord} disabled={this.state.isEditMode}>
+            {this.props.btn.edit}
+          </button>
+        </div>
+        <div className="cell" role="cell">
+          <button className="actionBtn" onClick={this.deleteRecord}>
+            {this.props.btn.delete}
+          </button>
+        </div>
+      </div>
     );
   }
 }

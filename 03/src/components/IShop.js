@@ -146,13 +146,7 @@ class IShop extends React.Component {
         {!this.state.createMode && this.state.selectedRecord !== null && this.state.selectedRecordData !== null && (
           <IShopItemCard
             key={this.state.selectedRecordData.id}
-            headline={this.props.headline}
             cardData={this.state.selectedRecordData}
-            editRecordMode={this.state.editMode}
-            onEditInProgressCb={this.editInProgressCb}
-            onEditCancelCb={this.editCancelCb}
-            onSaveRecordCb={this.saveRecordCb}
-            validator={this.props.validator}
           />
         )}
         {this.state.createMode && (
