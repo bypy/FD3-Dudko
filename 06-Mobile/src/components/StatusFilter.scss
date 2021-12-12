@@ -1,0 +1,31 @@
+$button-accent: rgb(200, 10, 10);
+
+.StatusFilter {
+  box-sizing: border-box;
+
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  .buttons-tab {
+    max-width: 30em;
+    display: flex;
+    justify-content: left;
+  }
+
+  button {
+    font-size: 1em;
+    min-width: 10em;
+    padding: .5em .25em;
+
+    &.active {
+      color: $button-accent;
+    }
+  }
+
+  button:nth-last-child(n+2) {
+    margin-right: 1em;
+  }
+
+
+}

@@ -4,6 +4,8 @@ import { PropTypes } from 'prop-types';
 import { eventBus } from './eventBus';
 import { LIFECYCLE_EVENT, RENDER_EVENT, FILTER_CHANGE } from './eventsAvailable';
 
+import './StatusFilter.scss';
+
 export default class StatusFilter extends React.PureComponent {
   static propTypes = {
     currentFilter: PropTypes.number.isRequired,
@@ -27,8 +29,8 @@ export default class StatusFilter extends React.PureComponent {
   render() {
     eventBus.emit(RENDER_EVENT, `${this.constructor.name} component RENDER`);
     return (
-      <div className="statusFilter">
-        <span onClick={this.filterChanged}>
+      <div className="StatusFilter">
+        <span className="buttons-tab" onClick={this.filterChanged}>
           <button name="0" className={this.props.currentFilter === 0 ? 'active' : null}>
             {this.props.btn.all}
           </button>
