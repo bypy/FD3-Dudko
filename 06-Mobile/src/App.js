@@ -27,10 +27,10 @@ ReactDOM.render(
 );
 
 function concatAndHash() {
-  return Array.from(arguments)
+  return Math.abs(Array.from(arguments)
     .join('')
     .split('')
-    .reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
+    .reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0));
 }
 
 function makeLogger(output, mode) {

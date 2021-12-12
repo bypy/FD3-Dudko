@@ -1,11 +1,17 @@
 import React from 'react';
+import { Fragment } from 'react';
 
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 
 import { eventBus } from './eventBus';
 import { LIFECYCLE_EVENT, RENDER_EVENT, ITEM_CLICKED } from './eventsAvailable';
+import { LOG_MODE } from './logModes';
 
 export default class Subscriber extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   static propTypes = {
     data: PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -30,13 +36,23 @@ export default class Subscriber extends React.Component {
     },
   };
 
-  state = { ...this.props.data, mode: this.props.mode };
+  state = {
+    ...this.props.data,
+    isEditMode: this.props.isEditMode,
+    underFocus: false,
+    offFocus: false,
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    eventBus.emit(LIFECYCLE_EVENT, `${LOG_MODE.DEBUG}: getDerivedStateFromProps from Subscriber id=${props.data.id} component`);
+    return {
+      underFocus: !state.underFocus && props.data.id === props.selectedSubscriber, // current customer have just got selection
+      offFocus: state.underFocus && props.selectedSubscriber !== state.id, // current customer have just lost selection
+    };
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
-    let isCurrentSelected = this.props.selectedSubscriber === this.props.data.id;
-    let resetSelection = isCurrentSelected && nextProps.selectedSubscriber !== this.props.data.id;
-    let setSelection = nextProps.data.id === nextProps.selectedSubscriber;
-    return resetSelection || setSelection;
+    return nextState.underFocus || nextState.offFocus;
   }
 
   clicked = () => {
@@ -44,7 +60,7 @@ export default class Subscriber extends React.Component {
   };
 
   render() {
-    eventBus.emit(RENDER_EVENT, `${this.constructor.name} component RENDER`);
+    eventBus.emit(RENDER_EVENT, `${this.constructor.name} id=${this.props.data.id} component RENDER`);
     return (
       <div
         className={this.props.selectedSubscriber === this.props.data.id ? 'IShopItem selected' : 'IShopItem'}
@@ -59,7 +75,12 @@ export default class Subscriber extends React.Component {
               defaultValue={this.state.lastName}
             />
           )}
-          {!this.props.isEditMode && this.state.lastName}
+          {!this.props.isEditMode && (
+            <Fragment>
+              {this.state.lastName}
+              <span className="customerId">ID: {this.state.id}</span>
+            </Fragment>
+          )}
         </div>
         <div className="cell left-align" role="cell">
           {this.props.isEditMode && (
