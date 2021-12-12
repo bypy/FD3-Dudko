@@ -12,7 +12,7 @@ $border-inner: solid $table-inner-border-width $table-border-color;
 $border-outer: solid $table-outer-border-width $table-border-color;
 
 
-.IShop {
+.MobileCompany {
 
   box-sizing: border-box;
   *, *:before, *:after {
@@ -41,7 +41,7 @@ $border-outer: solid $table-outer-border-width $table-border-color;
     border-bottom: $border-outer;
   }
 
-  .iShopHeader {
+  .mCompanyHeader {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
@@ -82,13 +82,13 @@ $border-outer: solid $table-outer-border-width $table-border-color;
 }
 
 @media all and (max-width: 767px) {
-  .IShop {
+  .MobileCompany {
 
     .caption {
       font-size: math.div($header-font-size * 3, 4);
     }
 
-    .iShopHeader {
+    .mCompanyHeader {
       min-height: 70px;
       align-items: normal;
 
@@ -112,9 +112,9 @@ $border-outer: solid $table-outer-border-width $table-border-color;
 
 @media all and (max-width: 430px) {
 
-  .IShop {
+  .MobileCompany {
 
-    .iShopHeader {
+    .mCompanyHeader {
       counter-reset: property-number;
       min-height: 140px;
 

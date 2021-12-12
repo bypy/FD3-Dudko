@@ -9,8 +9,8 @@ import { LOG_MODE } from './logModes';
 import StatusFilter from './StatusFilter';
 import Subscriber from './Subscriber';
 
-import './IShop.scss';
-import './IShopItem.scss';
+import './MobileCompany.scss';
+
 
 export default class MobileCompany extends React.PureComponent {
   static propTypes = {
@@ -38,7 +38,7 @@ export default class MobileCompany extends React.PureComponent {
       )
     ),
     loggerMode: 'info',
-    classname: 'IShop',
+    classname: 'MobileCompany',
   };
 
   state = {
@@ -76,7 +76,7 @@ export default class MobileCompany extends React.PureComponent {
         <hr />
         <div className={this.props.classname} role="table">
           <div className="headerWrapper">
-            <div className="iShopHeader" role="row">
+            <div className="mCompanyHeader" role="row">
               {this.props.header}
             </div>
           </div>

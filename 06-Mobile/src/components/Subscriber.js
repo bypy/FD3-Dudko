@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import { eventBus } from './eventBus';
 import { RENDER_EVENT, ITEM_CLICKED } from './eventsAvailable';
+import './Subscriber.scss';
 import { LOG_MODE } from './logModes';
 
 export default class Subscriber extends React.PureComponent {
@@ -81,7 +82,7 @@ export default class Subscriber extends React.PureComponent {
     return (
       (this.props.currentFilter === 0 || this.props.currentFilter === this.state.status) && (
         <div
-          className={this.props.selectedSubscriber === this.props.data.id ? 'IShopItem selected' : 'IShopItem'}
+          className={this.props.selectedSubscriber === this.props.data.id ? 'Subscriber selected' : 'Subscriber'}
           role="row"
           onClick={this.clicked}
         >
@@ -130,7 +131,7 @@ export default class Subscriber extends React.PureComponent {
             )}
             {!this.props.isEditMode && this.state.balance}
           </div>
-          <div className="cell" role="cell">
+          <div className={this.state.status === this.props.status.blocked.code ? 'cell blocked' : 'cell'} role="cell">
             {this.getStatusNameByCode(this.state.status)}
           </div>
           <div className="cell" role="cell">
