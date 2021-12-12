@@ -19,7 +19,7 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
   flex-flow: row wrap;
   transition: background-color 0.1s ease-in-out;
 
-  &:nth-child(even) {
+  &:nth-child(odd) {
     background: $item-bg-color;
 
     .cell.first {

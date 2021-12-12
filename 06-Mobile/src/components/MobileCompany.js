@@ -21,7 +21,6 @@ export default class MobileCompany extends React.PureComponent {
         firstName: PropTypes.string.isRequired,
         surName: PropTypes.string.isRequired,
         balance: PropTypes.number.isRequired,
-        status: PropTypes.string.isRequired,
       }).isRequired
     ).isRequired,
     loggerMode: PropTypes.string,
@@ -43,7 +42,7 @@ export default class MobileCompany extends React.PureComponent {
   };
 
   state = {
-    currentFilter: '0', // 0-all, 1-active, 2-blocked
+    currentFilter: 0, // 0-all, 1-active, 2-blocked
     subscribers: this.props.subscribers,
     selectedSubscriber: null,
     isEditMode: false,
@@ -60,7 +59,7 @@ export default class MobileCompany extends React.PureComponent {
   }
 
   setFilter = (btnName) => {
-    this.setState({ currentFilter: btnName });
+    this.setState({ currentFilter: Number(btnName) });
   };
 
   setSelected = (id) => {
@@ -86,6 +85,7 @@ export default class MobileCompany extends React.PureComponent {
               key={subscriber.id}
               data={subscriber}
               selectedSubscriber={this.state.selectedSubscriber}
+              currentFilter={this.state.currentFilter}
               isEditMode={this.state.isEditMode}
             />
           ))}

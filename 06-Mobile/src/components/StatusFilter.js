@@ -6,7 +6,7 @@ import { LIFECYCLE_EVENT, RENDER_EVENT, FILTER_CHANGE } from './eventsAvailable'
 
 export default class StatusFilter extends React.PureComponent {
   static propTypes = {
-    currentFilter: PropTypes.string.isRequired,
+    currentFilter: PropTypes.number.isRequired,
     btn: PropTypes.shape({}),
   };
 
@@ -29,13 +29,13 @@ export default class StatusFilter extends React.PureComponent {
     return (
       <div className="statusFilter">
         <span onClick={this.filterChanged}>
-          <button name="0" className={this.props.currentFilter === '0' ? 'active' : null}>
+          <button name="0" className={this.props.currentFilter === 0 ? 'active' : null}>
             {this.props.btn.all}
           </button>
-          <button name="1" className={this.props.currentFilter === '1' ? 'active' : null}>
+          <button name="1" className={this.props.currentFilter === 1 ? 'active' : null}>
             {this.props.btn.active}
           </button>
-          <button name="2" className={this.props.currentFilter === '2' ? 'active' : null}>
+          <button name="2" className={this.props.currentFilter === 2 ? 'active' : null}>
             {this.props.btn.blocked}
           </button>
         </span>
