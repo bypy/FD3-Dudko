@@ -3,7 +3,18 @@ import { Fragment } from 'react';
 import { PropTypes } from 'prop-types';
 
 import { eventBus } from './eventBus';
-import { LIFECYCLE_EVENT, RENDER_EVENT, FILTER_CHANGE, ITEM_CLICKED, ITEM_DELETE, ITEM_EDIT } from './eventsAvailable';
+import {
+  LIFECYCLE_EVENT,
+  RENDER_EVENT,
+  FILTER_CHANGE,
+  ITEM_EDIT_COMPLETE,
+  ITEM_DELETE,
+  ITEM_EDIT,
+  ITEM_SAVE,
+  ITEM_LOST_CHANGES,
+  SET_FORM_INVALID,
+} from './eventsAvailable';
+
 import { newSubscriberTempId } from './utils';
 
 import StatusFilter from './StatusFilter';
@@ -26,11 +37,14 @@ export default class MobileCompany extends React.PureComponent {
     classname: PropTypes.string,
     header: PropTypes.array, // have to declare for PureComponent
     addBtnText: PropTypes.string,
+    saveBtnText: PropTypes.string,
+    cancelBtnText: PropTypes.string,
+    validator: PropTypes.func,
   };
 
   static defaultProps = {
     header: Array.prototype.map.call(
-      ['Фамилия', 'Имя', 'Отчество', 'Баланс', 'Статус', 'Редактировать', 'Удалить'],
+      ['Фамилия*', 'Имя*', 'Отчество', 'Баланс*', 'Статус', 'Редактировать', 'Удалить'],
       (property, index) => (
         <div key={index} className={index === 0 ? 'cell first' : 'cell'}>
           {property}
@@ -39,28 +53,34 @@ export default class MobileCompany extends React.PureComponent {
     ),
     classname: 'MobileCompany',
     addBtnText: 'Добавить клиента',
+    saveBtnText: 'Сохранить клиента',
+    cancelBtnText: 'Отмена',
   };
 
   state = {
     currentFilter: 0, // 0-all, 1-active, 2-blocked
     subscribers: this.props.subscribers,
-    selectedSubscriber: null,
-    editedSubscriber: null,
+    editedSubscriberId: null,
   };
 
   componentDidMount() {
     eventBus.emit(LIFECYCLE_EVENT, `componentDidMount from ${this.constructor.name} component`);
     eventBus.addListener(FILTER_CHANGE, this.setFilter);
-    eventBus.addListener(ITEM_CLICKED, this.processClick);
     eventBus.addListener(ITEM_EDIT, this.setEdited);
+    eventBus.addListener(ITEM_LOST_CHANGES, this.removeSaveBtnHighlight);
+    eventBus.addListener(SET_FORM_INVALID, this.setFormInvalid);
+    eventBus.addListener(ITEM_EDIT_COMPLETE, this.updateCustomerData);
     eventBus.addListener(ITEM_DELETE, this.deleteSubscriber);
   }
 
   componentWillUnmount() {
     eventBus.emit(LIFECYCLE_EVENT, `componentWillUnmount from ${this.constructor.name} component`);
-    eventBus.removeListener(FILTER_CHANGE);
-    eventBus.removeListener(ITEM_CLICKED);
-    eventBus.removeListener(ITEM_DELETE);
+    eventBus.removeListener(FILTER_CHANGE, this.setFilter);
+    eventBus.removeListener(ITEM_EDIT, this.setEdited);
+    eventBus.removeListener(ITEM_LOST_CHANGES, this.removeSaveBtnHighlight);
+    eventBus.removeListener(SET_FORM_INVALID, this.setFormInvalid);
+    eventBus.removeListener(ITEM_EDIT_COMPLETE, this.updateCustomerData);
+    eventBus.removeListener(ITEM_DELETE, this.deleteSubscriber);
   }
 
   setFilter = (btnName) => {
@@ -68,11 +88,28 @@ export default class MobileCompany extends React.PureComponent {
   };
 
   setEdited = (id) => {
-    this.setState({ editedSubscriber: id });
+    this.setState({ editedSubscriberId: id });
   };
 
-  processClick = () => {
-    this.setState({ editedSubscriber: null });
+  unsetEdited = () => {
+    this.setState({ editedSubscriberId: null });
+  };
+
+  updateCustomerData = (newData) => {
+    let actualSubscribers = this.state.subscribers.map((s) => (s.id === this.state.editedSubscriberId ? newData : s));
+    this.setState({
+      subscribers: actualSubscribers,
+      editedSubscriberId: null,
+      invalidForm: false
+    });
+  };
+
+  removeSaveBtnHighlight = (removeFlag) => {
+    removeFlag ? this.saveBtnRef.classList.remove('warn') : this.saveBtnRef.classList.add('warn');
+  };
+
+  setFormInvalid = () => {
+    this.setState({ invalidForm: true });
   };
 
   deleteSubscriber = (id) => {
@@ -100,6 +137,14 @@ export default class MobileCompany extends React.PureComponent {
     });
   };
 
+  saveSubscriber = () => {
+    eventBus.emit(ITEM_SAVE, [this.state.invalidForm, this.state.editedSubscriberId, this.props.validator]);
+  };
+
+  setSaveBtnRef = (ref) => {
+    this.saveBtnRef = ref;
+  };
+
   render() {
     eventBus.emit(RENDER_EVENT, `${this.constructor.name} component RENDER`);
     return (
@@ -122,13 +167,26 @@ export default class MobileCompany extends React.PureComponent {
                 (this.state.currentFilter === 2 && subscriber.balance < 0)
             )
             .map((subscriber) => (
-              <Subscriber key={subscriber.id} data={subscriber} editedSubscriber={this.state.editedSubscriber} />
+              <Subscriber key={subscriber.id} data={subscriber} editedSubscriberId={this.state.editedSubscriberId} />
             ))}
         </div>
-        <div className="addClientBtn">
-          <button onClick={this.addSubscriber} disabled={this.state.addMode}>
-            {this.props.addBtnText}
-          </button>
+        <hr />
+        <div className="ctrlButtons">
+          <span className="buttons-tab" onClick={this.filterChanged}>
+            <button onClick={this.addSubscriber} disabled={this.state.editedSubscriberId || this.state.invalidForm}>
+              {this.props.addBtnText}
+            </button>
+            <button
+              onClick={this.saveSubscriber}
+              disabled={!this.state.editedSubscriberId}
+              ref={this.setSaveBtnRef}
+            >
+              {this.props.saveBtnText}
+            </button>
+            <button onClick={this.unsetEdited} disabled={!this.state.editedSubscriberId}>
+              {this.props.cancelBtnText}
+            </button>
+          </span>
         </div>
       </Fragment>
     );

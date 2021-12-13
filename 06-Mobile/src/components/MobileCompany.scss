@@ -10,11 +10,13 @@ $table-outer-border-width: 2px;
 $table-inner-border-width: 1px;
 $border-inner: solid $table-inner-border-width $table-border-color;
 $border-outer: solid $table-outer-border-width $table-border-color;
+$button-accent: crimson;
 
 
 .MobileCompany {
 
   box-sizing: border-box;
+
   *, *:before, *:after {
     box-sizing: inherit;
   }
@@ -63,22 +65,34 @@ $border-outer: solid $table-outer-border-width $table-border-color;
         border-right: 0;
       }
     }
+  }
+}
 
+.ctrlButtons {
+  .buttons-tab {
+    max-width: 30em;
+    display: flex;
+    justify-content: left;
   }
 
-  .addRecordBtn {
-    background: $bg-header;
-    border-top: $border-inner;
-    padding: 1em 0;
-    text-align: center;
+  button {
+    font-family: inherit;
+    font-size: 1em;
+    min-width: 10em;
+    padding: calc(0.5em - 1px) calc(0.5em - 1px);
 
-    button {
-      padding: 5px 10px;
-      font-size: inherit;
-      font-family: inherit;
+    &.warn {
+      color: white;
+      background-color: royalblue;
+      border-style: none;
+      transition-property: background-color;
+      transition-duration: 0.5s;
     }
   }
 
+  button:nth-last-child(n+2) {
+    margin-right: 1em;
+  }
 }
 
 @media all and (max-width: 767px) {
@@ -126,12 +140,13 @@ $border-outer: solid $table-outer-border-width $table-border-color;
         counter-increment: property-number;
 
         &::before {
-          content: counter(property-number)". ";
+          content: counter(property-number) ". ";
           margin-right: 2ex;
           color: dimgray;
           font-size: 0.75em;
           transform: translateY(2px);
         }
+
         &.first {
           border-bottom: 0;
         }

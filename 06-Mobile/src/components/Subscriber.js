@@ -4,8 +4,19 @@ import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { eventBus } from './eventBus';
-import { LIFECYCLE_EVENT, RENDER_EVENT, ITEM_CLICKED, ITEM_EDIT, EDIT_COMPLETE, ITEM_DELETE } from './eventsAvailable';
+import {
+  LIFECYCLE_EVENT,
+  RENDER_EVENT,
+  ITEM_EDIT_COMPLETE,
+  ITEM_EDIT,
+  ITEM_DELETE,
+  ITEM_SAVE,
+  ITEM_LOST_CHANGES,
+  SET_FORM_INVALID,
+} from './eventsAvailable';
 import { concatAndHash, newSubscriberTempId } from './utils';
+import { VALIDATION_TYPES as v } from './validator';
+
 import './Subscriber.scss';
 
 export default class Subscriber extends React.PureComponent {
@@ -17,37 +28,79 @@ export default class Subscriber extends React.PureComponent {
       surName: PropTypes.string.isRequired,
       balance: PropTypes.number.isRequired,
     }), // is null in add subscriber mode
-    editedSubscriber: PropTypes.number,
+    editedSubscriberId: PropTypes.number,
     btn: PropTypes.shape({}),
   };
 
   static defaultProps = {
-    editedSubscriber: null,
+    editedSubscriberId: null,
     btn: {
       edit: 'Редактировать',
       delete: 'Удалить',
     },
   };
 
-  state = {};
+  state = {}; // derivedProps: isEditMode, isBlockedCustomer
 
   static getDerivedStateFromProps(props, state) {
     eventBus.emit(LIFECYCLE_EVENT, `getDerivedStateFromProps from Subscriber id=${props.data.id} component`);
     return {
-      isEditMode: props.editedSubscriber === props.data.id,
-      isBlocked: props.data.balance < 0,
+      isEditMode: props.editedSubscriberId === props.data.id,
+      isBlockedCustomer: props.data.balance < 0,
     };
   }
 
-  clickedOutside = () => {
-    if (this.props.data.id === this.state.editedSubscriber) return;
-    eventBus.emit(ITEM_CLICKED, this.props.data.id);
-    this.updateSubscriberData();
+  componentDidMount() {
+    eventBus.addListener(ITEM_SAVE, this.saveRecord);
+  }
+
+  componentWillUnmount() {
+    eventBus.removeListener(ITEM_SAVE, this.saveRecord);
+  }
+
+  editCustomer = (EO) => {
+    EO.preventDefault();
+    if (this.props.editedSubscriberId) {
+      if (confirm('Внесенные изменения будут потеряны! OK: сохранить')) {
+        eventBus.emit(ITEM_LOST_CHANGES, false);
+      } else {
+        eventBus.emit(ITEM_EDIT, this.props.data.id);
+        eventBus.emit(ITEM_LOST_CHANGES, true);
+      }
+    } else {
+      eventBus.emit(ITEM_EDIT, this.props.data.id);
+    }
   };
 
-  editRecord = (EO) => {
-    EO.stopPropagation();
-    eventBus.emit(ITEM_EDIT, this.props.data.id);
+  saveRecord = (argList) => {
+    const [clearWarningsFlag, id, validationFunc] = argList;
+    clearWarningsFlag && this.hideErrors();
+    if (this.props.data.id !== id) return; // fires only for currently editing input field!
+    const [errors, validUserData] = this.collectSubscriberErrorsAndData(validationFunc);
+    if (errors.length) {
+      this.showError(errors);
+      eventBus.emit(SET_FORM_INVALID);
+    } else {
+      eventBus.emit(ITEM_EDIT_COMPLETE, validUserData);
+    }
+  };
+
+  showError = (errorList) => {
+    errorList.forEach((e) => {
+      const { ref, errorText } = e;
+      const errNode = document.createElement('span');
+      errNode.className = 'invalid';
+      errNode.textContent = errorText;
+      ref.parentNode.appendChild(errNode);
+    });
+  };
+
+  hideErrors = () => {
+    const inputRefs = [this.lastNameRef, this.firstNameRef, this.surNameRef, this.balanceRef].filter((r) => !!r);
+    inputRefs.forEach((ref) => {
+      const errNode = ref.parentNode.querySelector('.invalid');
+      errNode && ref.parentNode.removeChild(errNode);
+    });
   };
 
   deleteRecord = () => {
@@ -56,7 +109,34 @@ export default class Subscriber extends React.PureComponent {
     }
   };
 
-  updateSubscriberData = () => {};
+  collectSubscriberErrorsAndData = (getValidationError) => {
+    let errorList = [];
+    let lastName, lastNameError;
+    if (this.lastNameRef) {
+      lastNameError = getValidationError(this.lastNameRef.value, [v.notEmpty, v.isString, v.isWord, v.minLength(2)]);
+      lastNameError && errorList.push({ ref: this.lastNameRef, errorText: lastNameError });
+      lastName = this.lastNameRef.value;
+    }
+    let firstName, firstNameError;
+    if (this.firstNameRef) {
+      firstNameError = getValidationError(this.firstNameRef.value, [v.notEmpty, v.isString, v.isWord]);
+      firstNameError && errorList.push({ ref: this.firstNameRef, errorText: firstNameError });
+      firstName = this.firstNameRef.value;
+    }
+    let surName, surNameError;
+    if (this.firstNameRef) {
+      surNameError = getValidationError(this.surNameRef.value, [v.isWord]);
+      surNameError && errorList.push({ ref: this.surNameRef, errorText: surNameError });
+      surName = this.surNameRef.value;
+    }
+    let balance, balanceError;
+    if (this.balanceRef) {
+      balanceError = getValidationError(this.balanceRef.value, [v.notEmpty, v.isNumber]);
+      balanceError && errorList.push({ ref: this.balanceRef, errorText: balanceError });
+      balance = balanceError ? this.balanceRef.value : Number(this.balanceRef.value);
+    }
+    return [errorList, { ...this.props.data, lastName, firstName, surName, balance }];
+  };
 
   setLastNameRef = (ref) => {
     this.lastNameRef = ref;
@@ -67,19 +147,23 @@ export default class Subscriber extends React.PureComponent {
   setSurNameRef = (ref) => {
     this.surNameRef = ref;
   };
+  setBalanceRef = (ref) => {
+    this.balanceRef = ref;
+  };
 
-  getStatusNameByCode = (isBlocked) => (isBlocked ? 'blocked' : 'active');
+  getStatusNameByCode = (isBlockedCustomer) => (isBlockedCustomer ? 'blocked' : 'active');
 
   render() {
     eventBus.emit(RENDER_EVENT, `${this.constructor.name} id=${this.props.data.id} component RENDER`);
     return (
-      <div className="Subscriber" role="row" onClick={this.clickedOutside}>
+      <div className="Subscriber" role="row">
         <div className="cell first left-align" role="cell">
           {this.state.isEditMode && (
             <Fragment>
               <input
                 className="userDataInput"
-                size={this.props.data.lastName.toString().length || 3} // 3 - default input width for empty content
+                size={this.props.data.lastName.toString().length || 8} // 3 - default input width for empty content
+                name="lastName"
                 defaultValue={this.props.data.lastName}
                 ref={this.setLastNameRef}
               />
@@ -97,7 +181,7 @@ export default class Subscriber extends React.PureComponent {
           {this.state.isEditMode && (
             <input
               className="userDataInput"
-              size={this.props.data.firstName.toString().length || 3} // 3 - default input width for empty content
+              size={this.props.data.firstName.toString().length || 8} // 3 - default input width for empty content
               defaultValue={this.props.data.firstName}
               ref={this.setFirstNameRef}
             />
@@ -108,7 +192,7 @@ export default class Subscriber extends React.PureComponent {
           {this.state.isEditMode && (
             <input
               className="userDataInput"
-              size={this.props.data.surName.toString().length || 3} // 3 - default input width for empty content
+              size={this.props.data.surName.toString().length || 8} // 3 - default input width for empty content
               defaultValue={this.props.data.surName}
               ref={this.setSurNameRef}
             />
@@ -119,17 +203,18 @@ export default class Subscriber extends React.PureComponent {
           {this.state.isEditMode && (
             <input
               className="userDataInput"
-              size={this.props.data.balance.toString().length || 3} // 3 - default input width for empty content
+              size={this.props.data.balance.toString().length || 8} // 3 - default input width for empty content
               defaultValue={this.props.data.balance}
+              ref={this.setBalanceRef}
             />
           )}
           {!this.state.isEditMode && this.props.data.balance}
         </div>
-        <div className={this.state.isBlocked ? 'cell blocked' : 'cell'} role="cell">
-          {this.getStatusNameByCode(this.state.isBlocked)}
+        <div className={this.state.isBlockedCustomer ? 'cell blocked' : 'cell'} role="cell">
+          {this.getStatusNameByCode(this.state.isBlockedCustomer)}
         </div>
         <div className="cell" role="cell">
-          <button className="actionBtn" onClick={this.editRecord} disabled={this.state.isEditMode}>
+          <button className="actionBtn" onClick={this.editCustomer} disabled={this.state.isEditMode}>
             {this.props.btn.edit}
           </button>
         </div>

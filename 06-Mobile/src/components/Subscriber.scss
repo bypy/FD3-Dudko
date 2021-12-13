@@ -85,6 +85,16 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
       font-size: inherit;
     }
 
+    .invalid {
+      font-size: 0.75em;
+      color: crimson;
+    }
+
+    .userDataInput::after {
+      content: attr(data-error);
+      font-size: 14px;
+    }
+
     .customerId {
       color: darkgrey;
     }
