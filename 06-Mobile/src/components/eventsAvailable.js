@@ -5,7 +5,7 @@ const ITEM_EDIT = 'subscriber_edit_in_progress';
 const ITEM_EDIT_COMPLETE = 'subscriber_clicked_event';
 const ITEM_DELETE = 'subscriber_delete_event';
 const ITEM_SAVE = 'subscriber_save_event';
-const ITEM_LOST_CHANGES = 'subscriber_unsaved_changes_are_about_to_lose_event';
+const PREVENT_LOSING_CHANGES = 'subscriber_unsaved_changes_are_about_to_lose_event';
 const SET_FORM_INVALID = 'some_user_inputs_are_invalid';
 
 
@@ -17,6 +17,6 @@ export {
   ITEM_EDIT,
   ITEM_DELETE,
   ITEM_SAVE,
-  ITEM_LOST_CHANGES,
+  PREVENT_LOSING_CHANGES,
   SET_FORM_INVALID
 };

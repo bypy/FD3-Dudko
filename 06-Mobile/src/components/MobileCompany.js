@@ -11,7 +11,7 @@ import {
   ITEM_DELETE,
   ITEM_EDIT,
   ITEM_SAVE,
-  ITEM_LOST_CHANGES,
+  PREVENT_LOSING_CHANGES,
   SET_FORM_INVALID,
 } from './eventsAvailable';
 
@@ -60,14 +60,14 @@ export default class MobileCompany extends React.PureComponent {
   state = {
     currentFilter: 0, // 0-all, 1-active, 2-blocked
     subscribers: this.props.subscribers,
-    editedSubscriberId: null,
+    companyInEditMode: false,
   };
 
   componentDidMount() {
     eventBus.emit(LIFECYCLE_EVENT, `componentDidMount from ${this.constructor.name} component`);
     eventBus.addListener(FILTER_CHANGE, this.setFilter);
-    eventBus.addListener(ITEM_EDIT, this.setEdited);
-    eventBus.addListener(ITEM_LOST_CHANGES, this.removeSaveBtnHighlight);
+    eventBus.addListener(ITEM_EDIT, this.setEditInProgress);
+    eventBus.addListener(PREVENT_LOSING_CHANGES, this.enableSaveBtnHighlight);
     eventBus.addListener(SET_FORM_INVALID, this.setFormInvalid);
     eventBus.addListener(ITEM_EDIT_COMPLETE, this.updateCustomerData);
     eventBus.addListener(ITEM_DELETE, this.deleteSubscriber);
@@ -76,8 +76,8 @@ export default class MobileCompany extends React.PureComponent {
   componentWillUnmount() {
     eventBus.emit(LIFECYCLE_EVENT, `componentWillUnmount from ${this.constructor.name} component`);
     eventBus.removeListener(FILTER_CHANGE, this.setFilter);
-    eventBus.removeListener(ITEM_EDIT, this.setEdited);
-    eventBus.removeListener(ITEM_LOST_CHANGES, this.removeSaveBtnHighlight);
+    eventBus.removeListener(ITEM_EDIT, this.setEditInProgress);
+    eventBus.removeListener(PREVENT_LOSING_CHANGES, this.enableSaveBtnHighlight);
     eventBus.removeListener(SET_FORM_INVALID, this.setFormInvalid);
     eventBus.removeListener(ITEM_EDIT_COMPLETE, this.updateCustomerData);
     eventBus.removeListener(ITEM_DELETE, this.deleteSubscriber);
@@ -87,25 +87,25 @@ export default class MobileCompany extends React.PureComponent {
     this.setState({ currentFilter: Number(btnName) });
   };
 
-  setEdited = (id) => {
-    this.setState({ editedSubscriberId: id });
+  setEditInProgress = () => {
+    this.setState({ companyInEditMode: true });
   };
 
   unsetEdited = () => {
-    this.setState({ editedSubscriberId: null });
+    this.setState({ companyInEditMode: false });
   };
 
   updateCustomerData = (newData) => {
-    let actualSubscribers = this.state.subscribers.map((s) => (s.id === this.state.editedSubscriberId ? newData : s));
+    let actualSubscribers = this.state.subscribers.map((s) => (s.id === this.state.companyInEditMode ? newData : s));
     this.setState({
       subscribers: actualSubscribers,
-      editedSubscriberId: null,
+      companyInEditMode: false,
       invalidForm: false
     });
   };
 
-  removeSaveBtnHighlight = (removeFlag) => {
-    removeFlag ? this.saveBtnRef.classList.remove('warn') : this.saveBtnRef.classList.add('warn');
+  enableSaveBtnHighlight = (flag) => {
+    flag ? this.saveBtnRef.classList.add('warn') : this.saveBtnRef.classList.remove('warn');
   };
 
   setFormInvalid = () => {
@@ -137,8 +137,8 @@ export default class MobileCompany extends React.PureComponent {
     });
   };
 
-  saveSubscriber = () => {
-    eventBus.emit(ITEM_SAVE, [this.state.invalidForm, this.state.editedSubscriberId, this.props.validator]);
+  saveChanges = () => {
+    eventBus.emit(ITEM_SAVE, [this.state.invalidForm, this.state.companyInEditMode, this.props.validator]);
   };
 
   setSaveBtnRef = (ref) => {
@@ -167,23 +167,23 @@ export default class MobileCompany extends React.PureComponent {
                 (this.state.currentFilter === 2 && subscriber.balance < 0)
             )
             .map((subscriber) => (
-              <Subscriber key={subscriber.id} data={subscriber} editedSubscriberId={this.state.editedSubscriberId} />
+              <Subscriber key={subscriber.id} data={subscriber} companyInEditMode={this.state.companyInEditMode} />
             ))}
         </div>
         <hr />
         <div className="ctrlButtons">
           <span className="buttons-tab" onClick={this.filterChanged}>
-            <button onClick={this.addSubscriber} disabled={this.state.editedSubscriberId || this.state.invalidForm}>
+            <button onClick={this.addSubscriber} disabled={this.state.companyInEditMode || this.state.invalidForm}>
               {this.props.addBtnText}
             </button>
             <button
-              onClick={this.saveSubscriber}
-              disabled={!this.state.editedSubscriberId}
+              onClick={this.saveChanges}
+              disabled={!this.state.companyInEditMode}
               ref={this.setSaveBtnRef}
             >
               {this.props.saveBtnText}
             </button>
-            <button onClick={this.unsetEdited} disabled={!this.state.editedSubscriberId}>
+            <button onClick={this.unsetEdited} disabled={!this.state.companyInEditMode}>
               {this.props.cancelBtnText}
             </button>
           </span>
