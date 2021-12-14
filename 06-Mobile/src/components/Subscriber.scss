@@ -3,6 +3,8 @@
 $cells-total-count: 7;
 $bg-table: white;
 $item-bg-color: #e9e9ed;
+$item-bg-color-blocked: #dc3545;
+$item-bg-color-active: #28a745;
 $item-text-color: black;
 $item-font-size: 1rem;
 $selected-item-bg-color: #ee8cfa;
@@ -69,9 +71,15 @@ $border-bold: $item-border-double-width $item-border-style $item-border-color;
     }
 
     &.blocked {
-      background-color: crimson;
-      color: white;
+      background-color: $item-bg-color-blocked;
+      color: $item-text-color;
     }
+
+    &.active {
+      background-color: $item-bg-color-active;
+      color: $item-text-color;
+    }
+
 
     .actionBtn {
       display: flex;

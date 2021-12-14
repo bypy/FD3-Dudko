@@ -16,6 +16,7 @@ function makeLogger(output, mode) {
     : (message) => output.log(`${LOG_MODE.DEBUG}: ${message}`);
 }
 
-const newSubscriberTempId = 99999;
+const newSubscriberTempId = 0;
+const newSubscriberInitBalance = 0;
 
-export { concatAndHash, makeLogger, newSubscriberTempId };
+export { concatAndHash, makeLogger, newSubscriberTempId, newSubscriberInitBalance };

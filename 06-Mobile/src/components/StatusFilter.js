@@ -9,6 +9,7 @@ import './StatusFilter.scss';
 export default class StatusFilter extends React.PureComponent {
   static propTypes = {
     currentFilter: PropTypes.number.isRequired,
+    companyInEditMode: PropTypes.bool.isRequired,
     btn: PropTypes.shape({}),
   };
 
@@ -31,17 +32,45 @@ export default class StatusFilter extends React.PureComponent {
     return (
       <div className="StatusFilter">
         <span className="buttons-tab" onClick={this.filterChanged}>
-          <button name="0" className={this.props.currentFilter === 0 ? 'active' : null}>
+          <button
+            name="0"
+            className={this.props.currentFilter === 0 ? 'active' : null}
+            disabled={this.props.companyInEditMode}
+          >
             {this.props.btn.all}
           </button>
-          <button name="1" className={this.props.currentFilter === 1 ? 'active' : null}>
+          <button
+            name="1"
+            className={this.props.currentFilter === 1 ? 'active' : null}
+            disabled={this.props.companyInEditMode}
+          >
             {this.props.btn.active}
           </button>
-          <button name="2" className={this.props.currentFilter === 2 ? 'active' : null}>
+          <button
+            name="2"
+            className={this.props.currentFilter === 2 ? 'active' : null}
+            disabled={this.props.companyInEditMode}
+          >
             {this.props.btn.blocked}
           </button>
         </span>
       </div>
     );
+  }
+
+  componentWillReceiveProps(nextProps) {
+    eventBus.emit(LIFECYCLE_EVENT, `componentWillReceiveProps from ${this.constructor.name} component`);
+  }
+
+  componentWillUpdate = () => {
+    eventBus.emit(LIFECYCLE_EVENT, `componentWillUpdate from ${this.constructor.name} component`);
+  };
+
+  componentDidUpdate = (oldProps, oldState) => {
+    eventBus.emit(LIFECYCLE_EVENT, `componentDidUpdate from ${this.constructor.name} component`);
+  };
+
+  componentWillMount() {
+    eventBus.emit(LIFECYCLE_EVENT, `componentWillMount from ${this.constructor.name} component`);
   }
 }

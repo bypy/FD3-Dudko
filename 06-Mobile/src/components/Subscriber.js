@@ -16,7 +16,6 @@ import {
 } from './eventsAvailable';
 import { concatAndHash, newSubscriberTempId } from './utils';
 
-
 import './Subscriber.scss';
 
 export default class Subscriber extends React.PureComponent {
@@ -39,7 +38,7 @@ export default class Subscriber extends React.PureComponent {
       edit: 'Редактировать',
       delete: 'Удалить',
     },
-    autocomplete: "off",
+    autocomplete: 'off',
   };
 
   state = {
@@ -48,11 +47,17 @@ export default class Subscriber extends React.PureComponent {
 
   static getDerivedStateFromProps(props, state) {
     eventBus.emit(LIFECYCLE_EVENT, `getDerivedStateFromProps from Subscriber id=${props.data.id} component`);
+    const isNewbie = props.data.id === newSubscriberTempId;
+    const isEditMode = state.subscriberInEditMode && props.companyInEditMode;
+
     return {
-      subscriberInEditMode: state.subscriberInEditMode && props.companyInEditMode,
+      subscriberInEditMode: isNewbie || isEditMode,
       isBlockedCustomer: props.data.balance < 0,
+      isNewbie,
     };
   }
+
+  // concatAndHash(props.data.lastName, props.data.firstName, props.data.surName)
 
   componentDidMount() {
     eventBus.addListener(ITEM_SAVE, this.saveSubscriber);
@@ -81,7 +86,15 @@ export default class Subscriber extends React.PureComponent {
       this.showError(errors);
       eventBus.emit(SET_FORM_INVALID);
     } else {
+      // OK, now it's allowed to store updated/new subscriber data
+      if (this.state.isNewbie) {
+        // create ID for the new subscriber
+        validUserData.id = concatAndHash(validUserData.lastName, validUserData.firstName, validUserData.surName);
+      }
       eventBus.emit(ITEM_EDIT_COMPLETE, validUserData);
+      this.setState({
+        subscriberInEditMode: false
+      })
     }
   };
 
@@ -214,20 +227,16 @@ export default class Subscriber extends React.PureComponent {
           )}
           {!this.state.subscriberInEditMode && this.props.data.balance}
         </div>
-        <div className={this.state.isBlockedCustomer ? 'cell blocked' : 'cell'} role="cell">
+        <div className={this.state.isBlockedCustomer ? 'cell blocked' : 'cell active'} role="cell">
           {this.getStatusNameByCode(this.state.isBlockedCustomer)}
         </div>
         <div className="cell" role="cell">
-          <button
-            className="actionBtn"
-            onClick={this.editSubscriber}
-            disabled={this.state.subscriberInEditMode || this.props.companyInEditMode}
-          >
+          <button className="actionBtn" onClick={this.editSubscriber} disabled={this.props.companyInEditMode}>
             {this.props.btn.edit}
           </button>
         </div>
         <div className="cell" role="cell">
-          <button className="actionBtn" onClick={this.deleteRecord}>
+          <button className="actionBtn" onClick={this.deleteRecord} disabled={this.props.companyInEditMode}>
             {this.props.btn.delete}
           </button>
         </div>

@@ -14,7 +14,7 @@ import {
   SET_FORM_INVALID,
 } from './eventsAvailable';
 
-import { newSubscriberTempId } from './utils';
+import { newSubscriberTempId, newSubscriberInitBalance } from './utils';
 
 import StatusFilter from './StatusFilter';
 import Subscriber from './Subscriber';
@@ -67,7 +67,7 @@ export default class MobileCompany extends React.PureComponent {
     eventBus.addListener(FILTER_CHANGE, this.setFilter);
     eventBus.addListener(ITEM_EDIT, this.setEditInProgress);
     eventBus.addListener(SET_FORM_INVALID, this.setFormInvalid);
-    eventBus.addListener(ITEM_EDIT_COMPLETE, this.updateCustomerData);
+    eventBus.addListener(ITEM_EDIT_COMPLETE, this.updateSubscribersData);
     eventBus.addListener(ITEM_DELETE, this.deleteSubscriber);
   }
 
@@ -76,7 +76,7 @@ export default class MobileCompany extends React.PureComponent {
     eventBus.removeListener(FILTER_CHANGE, this.setFilter);
     eventBus.removeListener(ITEM_EDIT, this.setEditInProgress);
     eventBus.removeListener(SET_FORM_INVALID, this.setFormInvalid);
-    eventBus.removeListener(ITEM_EDIT_COMPLETE, this.updateCustomerData);
+    eventBus.removeListener(ITEM_EDIT_COMPLETE, this.updateSubscribersData);
     eventBus.removeListener(ITEM_DELETE, this.deleteSubscriber);
   }
 
@@ -88,25 +88,45 @@ export default class MobileCompany extends React.PureComponent {
     this.setState({ companyInEditMode: true });
   };
 
-  unsetEdited = () => {
-    this.setState({ companyInEditMode: false });
+  setFormInvalid = () => {
+    this.setState({ invalidForm: true });
   };
 
-  updateCustomerData = (newData) => {
-    let actualSubscribers = this.state.subscribers.map((s) => (s.id === newData.id ? newData : s));
+  updateSubscribersData = (enteredSubscriberData) => {
+    let actualSubscribers = [];
+    this.state.subscribers.forEach((stateSubscriber, index) => {
+      // state has empty subscriber template
+      if (stateSubscriber.id !== enteredSubscriberData.id && stateSubscriber.id !== newSubscriberTempId) {
+        actualSubscribers.push(stateSubscriber);
+      } else {
+        // exclude empty subscriber template and replace with entered subscriber data
+        actualSubscribers.push(enteredSubscriberData);
+      }
+    });
     this.setState({
       subscribers: actualSubscribers,
       companyInEditMode: false,
-      invalidForm: false
+      invalidForm: false,
+      createSubscriberMode: false,
     });
   };
 
-  enableSaveBtnHighlight = (flag) => {
-    flag ? this.saveBtnRef.classList.add('warn') : this.saveBtnRef.classList.remove('warn');
+  resetCompanyEditMode = () => {
+    if (this.state.createSubscriberMode) {
+      this.setState({
+        subscribers: this.state.subscribers.filter((s) => s.id !== newSubscriberTempId),
+      });
+    }
+    this.setState({ companyInEditMode: false });
   };
 
-  setFormInvalid = () => {
-    this.setState({ invalidForm: true });
+  addSubscriber = () => {
+    this.setState({
+      subscribers: [...this.state.subscribers, this.newSubscriberTemplate()],
+      selectedSubscriber: newSubscriberTempId,
+      companyInEditMode: true,
+      createSubscriberMode: true,
+    });
   };
 
   deleteSubscriber = (id) => {
@@ -116,30 +136,8 @@ export default class MobileCompany extends React.PureComponent {
     });
   };
 
-  createNewSubscriber = () => {
-    return {
-      id: newSubscriberTempId,
-      lastName: '',
-      firstName: '',
-      surName: '',
-      balance: 0,
-    };
-  };
-
-  addSubscriber = () => {
-    this.setState({
-      subscribers: [...this.state.subscribers, this.createNewSubscriber()],
-      selectedSubscriber: newSubscriberTempId,
-      addMode: true,
-    });
-  };
-
-  saveChanges = () => {
+  saveChangesRequest = () => {
     eventBus.emit(ITEM_SAVE, [this.state.invalidForm, this.props.validator]);
-  };
-
-  setSaveBtnRef = (ref) => {
-    this.saveBtnRef = ref;
   };
 
   render() {
@@ -148,7 +146,7 @@ export default class MobileCompany extends React.PureComponent {
       <Fragment>
         <span>{`Компания: ${this.props.company}`}</span>
         <hr />
-        <StatusFilter currentFilter={this.state.currentFilter} />
+        <StatusFilter currentFilter={this.state.currentFilter} companyInEditMode={this.state.companyInEditMode} />
         <hr />
         <div className={this.props.classname} role="table">
           <div className="headerWrapper">
@@ -173,14 +171,10 @@ export default class MobileCompany extends React.PureComponent {
             <button onClick={this.addSubscriber} disabled={this.state.companyInEditMode || this.state.invalidForm}>
               {this.props.addBtnText}
             </button>
-            <button
-              onClick={this.saveChanges}
-              disabled={!this.state.companyInEditMode}
-              ref={this.setSaveBtnRef}
-            >
+            <button onClick={this.saveChangesRequest} disabled={!this.state.companyInEditMode}>
               {this.props.saveBtnText}
             </button>
-            <button onClick={this.unsetEdited} disabled={!this.state.companyInEditMode}>
+            <button onClick={this.resetCompanyEditMode} disabled={!this.state.companyInEditMode}>
               {this.props.cancelBtnText}
             </button>
           </span>
@@ -188,6 +182,16 @@ export default class MobileCompany extends React.PureComponent {
       </Fragment>
     );
   }
+
+  newSubscriberTemplate = () => {
+    return {
+      id: newSubscriberTempId,
+      lastName: '',
+      firstName: '',
+      surName: '',
+      balance: newSubscriberInitBalance,
+    };
+  };
 
   componentWillReceiveProps(nextProps) {
     eventBus.emit(LIFECYCLE_EVENT, `componentWillReceiveProps from ${this.constructor.name} component`);
