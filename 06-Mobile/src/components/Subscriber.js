@@ -43,7 +43,7 @@ export default class Subscriber extends React.PureComponent {
 
   state = {
     subscriberInEditMode: false,
-  }; // derivedProps: subscriberInEditMode, isBlockedCustomer
+  };
 
   static getDerivedStateFromProps(props, state) {
     eventBus.emit(LIFECYCLE_EVENT, `getDerivedStateFromProps from Subscriber id=${props.data.id} component`);
@@ -57,8 +57,6 @@ export default class Subscriber extends React.PureComponent {
     };
   }
 
-  // concatAndHash(props.data.lastName, props.data.firstName, props.data.surName)
-
   componentDidMount() {
     eventBus.addListener(ITEM_SAVE, this.saveSubscriber);
   }
@@ -71,10 +69,6 @@ export default class Subscriber extends React.PureComponent {
     EO.preventDefault();
     this.setState({ subscriberInEditMode: true });
     eventBus.emit(ITEM_EDIT);
-  };
-
-  unsetEditState = () => {
-    this.setState({ subscriberInEditMode: false });
   };
 
   saveSubscriber = (argList) => {
