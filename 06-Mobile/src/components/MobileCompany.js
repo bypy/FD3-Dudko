@@ -11,7 +11,6 @@ import {
   ITEM_DELETE,
   ITEM_EDIT,
   ITEM_SAVE,
-  PREVENT_LOSING_CHANGES,
   SET_FORM_INVALID,
 } from './eventsAvailable';
 
@@ -67,7 +66,6 @@ export default class MobileCompany extends React.PureComponent {
     eventBus.emit(LIFECYCLE_EVENT, `componentDidMount from ${this.constructor.name} component`);
     eventBus.addListener(FILTER_CHANGE, this.setFilter);
     eventBus.addListener(ITEM_EDIT, this.setEditInProgress);
-    eventBus.addListener(PREVENT_LOSING_CHANGES, this.enableSaveBtnHighlight);
     eventBus.addListener(SET_FORM_INVALID, this.setFormInvalid);
     eventBus.addListener(ITEM_EDIT_COMPLETE, this.updateCustomerData);
     eventBus.addListener(ITEM_DELETE, this.deleteSubscriber);
@@ -77,7 +75,6 @@ export default class MobileCompany extends React.PureComponent {
     eventBus.emit(LIFECYCLE_EVENT, `componentWillUnmount from ${this.constructor.name} component`);
     eventBus.removeListener(FILTER_CHANGE, this.setFilter);
     eventBus.removeListener(ITEM_EDIT, this.setEditInProgress);
-    eventBus.removeListener(PREVENT_LOSING_CHANGES, this.enableSaveBtnHighlight);
     eventBus.removeListener(SET_FORM_INVALID, this.setFormInvalid);
     eventBus.removeListener(ITEM_EDIT_COMPLETE, this.updateCustomerData);
     eventBus.removeListener(ITEM_DELETE, this.deleteSubscriber);
@@ -96,7 +93,7 @@ export default class MobileCompany extends React.PureComponent {
   };
 
   updateCustomerData = (newData) => {
-    let actualSubscribers = this.state.subscribers.map((s) => (s.id === this.state.companyInEditMode ? newData : s));
+    let actualSubscribers = this.state.subscribers.map((s) => (s.id === newData.id ? newData : s));
     this.setState({
       subscribers: actualSubscribers,
       companyInEditMode: false,
@@ -138,7 +135,7 @@ export default class MobileCompany extends React.PureComponent {
   };
 
   saveChanges = () => {
-    eventBus.emit(ITEM_SAVE, [this.state.invalidForm, this.state.companyInEditMode, this.props.validator]);
+    eventBus.emit(ITEM_SAVE, [this.state.invalidForm, this.props.validator]);
   };
 
   setSaveBtnRef = (ref) => {

@@ -4,6 +4,7 @@ import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { eventBus } from './eventBus';
+import { VALIDATION_TYPES as v } from './validator';
 import {
   LIFECYCLE_EVENT,
   RENDER_EVENT,
@@ -11,11 +12,10 @@ import {
   ITEM_EDIT,
   ITEM_DELETE,
   ITEM_SAVE,
-  PREVENT_LOSING_CHANGES,
   SET_FORM_INVALID,
 } from './eventsAvailable';
 import { concatAndHash, newSubscriberTempId } from './utils';
-import { VALIDATION_TYPES as v } from './validator';
+
 
 import './Subscriber.scss';
 
@@ -30,6 +30,7 @@ export default class Subscriber extends React.PureComponent {
     }), // is null in add subscriber mode
     companyInEditMode: PropTypes.bool,
     btn: PropTypes.shape({}),
+    autocomplete: PropTypes.string,
   };
 
   static defaultProps = {
@@ -38,6 +39,7 @@ export default class Subscriber extends React.PureComponent {
       edit: 'Редактировать',
       delete: 'Удалить',
     },
+    autocomplete: "off",
   };
 
   state = {
@@ -46,11 +48,8 @@ export default class Subscriber extends React.PureComponent {
 
   static getDerivedStateFromProps(props, state) {
     eventBus.emit(LIFECYCLE_EVENT, `getDerivedStateFromProps from Subscriber id=${props.data.id} component`);
-    let wasUnderEdit = state.subscriberInEditMode;
-    let newEditInProgress = props.companyInEditMode;
-    let dropEditMode = wasUnderEdit && newEditInProgress;
     return {
-      subscriberInEditMode: dropEditMode, // other subscriber going to be changed
+      subscriberInEditMode: state.subscriberInEditMode && props.companyInEditMode,
       isBlockedCustomer: props.data.balance < 0,
     };
   }
@@ -65,18 +64,8 @@ export default class Subscriber extends React.PureComponent {
 
   editSubscriber = (EO) => {
     EO.preventDefault();
-    if (this.props.companyInEditMode) {
-      if (confirm('Внесенные изменения будут потеряны! OK: сохранить')) {
-        eventBus.emit(PREVENT_LOSING_CHANGES, true);
-      } else {
-        this.setState({ subscriberInEditMode: true });
-        eventBus.emit(ITEM_EDIT);
-        eventBus.emit(PREVENT_LOSING_CHANGES, false);
-      }
-    } else {
-      this.setState({ subscriberInEditMode: true });
-      eventBus.emit(ITEM_EDIT);
-    }
+    this.setState({ subscriberInEditMode: true });
+    eventBus.emit(ITEM_EDIT);
   };
 
   unsetEditState = () => {
@@ -84,9 +73,9 @@ export default class Subscriber extends React.PureComponent {
   };
 
   saveSubscriber = (argList) => {
-    const [clearWarningsFlag, validationFunc] = argList;
+    const [isInvalid, validationFunc] = argList;
     if (!this.state.subscriberInEditMode) return; // fires only for currently editing input field!
-    clearWarningsFlag && this.hideErrors();
+    isInvalid && this.hideErrors();
     const [errors, validUserData] = this.collectSubscriberErrorsAndData(validationFunc);
     if (errors.length) {
       this.showError(errors);
@@ -177,6 +166,7 @@ export default class Subscriber extends React.PureComponent {
                 name="lastName"
                 defaultValue={this.props.data.lastName}
                 ref={this.setLastNameRef}
+                autoComplete={this.props.autocomplete}
               />
               <span className="customerId">ID: {this.props.data.id}</span>
             </Fragment>
@@ -195,6 +185,7 @@ export default class Subscriber extends React.PureComponent {
               size={this.props.data.firstName.toString().length || 8} // 3 - default input width for empty content
               defaultValue={this.props.data.firstName}
               ref={this.setFirstNameRef}
+              autoComplete={this.props.autocomplete}
             />
           )}
           {!this.state.subscriberInEditMode && this.props.data.firstName}
@@ -206,6 +197,7 @@ export default class Subscriber extends React.PureComponent {
               size={this.props.data.surName.toString().length || 8} // 3 - default input width for empty content
               defaultValue={this.props.data.surName}
               ref={this.setSurNameRef}
+              autoComplete={this.props.autocomplete}
             />
           )}
           {!this.state.subscriberInEditMode && this.props.data.surName}
@@ -217,6 +209,7 @@ export default class Subscriber extends React.PureComponent {
               size={this.props.data.balance.toString().length || 8} // 3 - default input width for empty content
               defaultValue={this.props.data.balance}
               ref={this.setBalanceRef}
+              autoComplete={this.props.autocomplete}
             />
           )}
           {!this.state.subscriberInEditMode && this.props.data.balance}
