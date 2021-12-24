@@ -225,12 +225,12 @@ export default class Subscriber extends React.PureComponent {
           {this.getStatusNameByCode(this.state.isBlockedCustomer)}
         </div>
         <div className="cell" role="cell">
-          <button className="actionBtn" onClick={this.editSubscriber} disabled={this.props.companyInEditMode}>
+          <button className="actionBtn" name="edit" onClick={this.editSubscriber} disabled={this.props.companyInEditMode}>
             {this.props.btn.edit}
           </button>
         </div>
         <div className="cell" role="cell">
-          <button className="actionBtn" onClick={this.deleteRecord} disabled={this.props.companyInEditMode}>
+          <button className="actionBtn" name="delete" onClick={this.deleteRecord} disabled={this.props.companyInEditMode}>
             {this.props.btn.delete}
           </button>
         </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import '../public/page.css';
+import '../static/page.css';
 import MobileCompany from './components/MobileCompany';
 import { eventBus } from './components/eventBus';
 import { concatAndHash, makeLogger } from './components/utils';

@@ -14,7 +14,7 @@ import {
   SET_FORM_INVALID,
 } from './eventsAvailable';
 
-import { newSubscriberTempId, newSubscriberInitBalance } from './utils';
+import { subscriberFilterFunc, newSubscriberTempId, newSubscriberInitBalance } from './utils';
 
 import StatusFilter from './StatusFilter';
 import Subscriber from './Subscriber';
@@ -156,10 +156,7 @@ export default class MobileCompany extends React.PureComponent {
           </div>
           {this.state.subscribers
             .filter(
-              (subscriber) =>
-                this.state.currentFilter === 0 ||
-                (this.state.currentFilter === 1 && !(subscriber.balance < 0)) ||
-                (this.state.currentFilter === 2 && subscriber.balance < 0)
+              (subscriber) => subscriberFilterFunc(this.state.currentFilter, subscriber)
             )
             .map((subscriber) => (
               <Subscriber key={subscriber.id} data={subscriber} companyInEditMode={this.state.companyInEditMode} />
@@ -168,13 +165,13 @@ export default class MobileCompany extends React.PureComponent {
         <hr />
         <div className="ctrlButtons">
           <span className="buttons-tab" onClick={this.filterChanged}>
-            <button onClick={this.addSubscriber} disabled={this.state.companyInEditMode || this.state.invalidForm}>
+            <button id="add" onClick={this.addSubscriber} disabled={this.state.companyInEditMode || this.state.invalidForm}>
               {this.props.addBtnText}
             </button>
-            <button onClick={this.saveChangesRequest} disabled={!this.state.companyInEditMode}>
+            <button id="save" onClick={this.saveChangesRequest} disabled={!this.state.companyInEditMode}>
               {this.props.saveBtnText}
             </button>
-            <button onClick={this.resetCompanyEditMode} disabled={!this.state.companyInEditMode}>
+            <button id="cancel" onClick={this.resetCompanyEditMode} disabled={!this.state.companyInEditMode}>
               {this.props.cancelBtnText}
             </button>
           </span>
@@ -193,19 +190,19 @@ export default class MobileCompany extends React.PureComponent {
     };
   };
 
-  componentWillReceiveProps(nextProps) {
-    eventBus.emit(LIFECYCLE_EVENT, `componentWillReceiveProps from ${this.constructor.name} component`);
-  }
-
-  componentWillUpdate = () => {
-    eventBus.emit(LIFECYCLE_EVENT, `componentWillUpdate from ${this.constructor.name} component`);
-  };
-
-  componentDidUpdate = (oldProps, oldState) => {
-    eventBus.emit(LIFECYCLE_EVENT, `componentDidUpdate from ${this.constructor.name} component`);
-  };
-
-  componentWillMount() {
-    eventBus.emit(LIFECYCLE_EVENT, `componentWillMount from ${this.constructor.name} component`);
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   eventBus.emit(LIFECYCLE_EVENT, `componentWillReceiveProps from ${this.constructor.name} component`);
+  // }
+  //
+  // componentWillUpdate = () => {
+  //   eventBus.emit(LIFECYCLE_EVENT, `componentWillUpdate from ${this.constructor.name} component`);
+  // };
+  //
+  // componentDidUpdate = (oldProps, oldState) => {
+  //   eventBus.emit(LIFECYCLE_EVENT, `componentDidUpdate from ${this.constructor.name} component`);
+  // };
+  //
+  // componentWillMount() {
+  //   eventBus.emit(LIFECYCLE_EVENT, `componentWillMount from ${this.constructor.name} component`);
+  // }
 }

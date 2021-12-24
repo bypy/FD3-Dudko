@@ -57,20 +57,4 @@ export default class StatusFilter extends React.PureComponent {
       </div>
     );
   }
-
-  componentWillReceiveProps(nextProps) {
-    eventBus.emit(LIFECYCLE_EVENT, `componentWillReceiveProps from ${this.constructor.name} component`);
-  }
-
-  componentWillUpdate = () => {
-    eventBus.emit(LIFECYCLE_EVENT, `componentWillUpdate from ${this.constructor.name} component`);
-  };
-
-  componentDidUpdate = (oldProps, oldState) => {
-    eventBus.emit(LIFECYCLE_EVENT, `componentDidUpdate from ${this.constructor.name} component`);
-  };
-
-  componentWillMount() {
-    eventBus.emit(LIFECYCLE_EVENT, `componentWillMount from ${this.constructor.name} component`);
-  }
 }

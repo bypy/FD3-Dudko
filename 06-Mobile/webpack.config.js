@@ -4,12 +4,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('./node_modules/terser-webpack-plugin'); // comes with webpack 5
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
-const servePage = 'index.html';
+const htmlTemplate = 'mobile-template.html';
 
 module.exports = {
-  entry: './src/App.js',
+  entry: ['babel-polyfill', './src/App.js'],
   output: {
-    filename: process.env.NODE_ENV === 'production' ? 'bundle.[contenthash].js' : 'bundle.js',
+    filename: process.env.NODE_ENV === 'production' ? '[name].bundle.[fullhash].min.js' : '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
@@ -18,14 +18,12 @@ module.exports = {
   devServer: {
     static: [
       {
-        directory: path.resolve(__dirname, 'dist'),
-      },
-      {
-        directory: path.resolve(__dirname, 'public'),
+        directory: path.resolve(__dirname, 'static'),
       },
     ],
     compress: false,
     port: 9000,
+    historyApiFallback: true,
   },
   module: {
     rules: [
@@ -65,12 +63,12 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: process.env.NODE_ENV === 'production' ? 'styles.[contenthash].css' : 'styles.css',
+      filename: process.env.NODE_ENV === 'production' ? 'styles.[fullhash].min.css' : 'styles.css',
     }),
     new HtmlWebpackPlugin({
-      filename: `${servePage}`,
-      template: './public/index.html',
-      favicon: './public/favicon.ico',
+      template: `./src/${htmlTemplate}`,
+      inject: 'body',
+      favicon: './static/favicon.ico',
     }),
   ],
 };

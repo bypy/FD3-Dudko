@@ -5,15 +5,18 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --node-env production",
-    "livebuild": "webpack serve --color"
+    "livebuild": "webpack serve --color",
+    "test": "jest"
   },
   "keywords": [],
   "author": "Dudko_A",
   "license": "ISC",
   "dependencies": {
+    "isomorphic-fetch": "^3.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react-dom": "^16.14.0",
+    "react-router-dom": "^6.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -22,9 +25,13 @@
     "@babel/preset-env": "^7.16.0",
     "@babel/preset-react": "^7.16.0",
     "babel-eslint": "^10.1.0",
+    "babel-jest": "^27.4.5",
     "babel-loader": "^8.2.3",
+    "babel-polyfill": "^6.26.0",
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^3.1.2",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-import": "^2.25.2",
@@ -32,8 +39,10 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.26.1",
     "html-webpack-plugin": "^5.5.0",
+    "jest": "^27.4.5",
     "mini-css-extract-plugin": "^2.4.4",
     "prettier": "^2.4.1",
+    "react-test-renderer": "^17.0.2",
     "sass": "^1.43.4",
     "sass-loader": "^12.3.0",
     "style-loader": "^3.3.1",
@@ -58,5 +67,19 @@
   "prettier": {
     "singleQuote": true,
     "printWidth": 120
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less|scss)$": "<rootDir>/__mocks__/styleMock.js"
+    },
+    "setupFiles": [
+      "<rootDir>/__tests__/setup.js"
+    ],
+    "testEnvironment": "jsdom",
+    "testMatch": [
+      "**/__tests__/*.js?(x)",
+      "!**/__tests__/setup.js"
+    ]
   }
 }

@@ -16,7 +16,15 @@ function makeLogger(output, mode) {
     : (message) => output.log(`${LOG_MODE.DEBUG}: ${message}`);
 }
 
+function subscriberFilterFunc(currentFilter, subscriber) {
+  return (
+    currentFilter === 0 ||
+    (currentFilter === 1 && !(subscriber.balance < 0)) ||
+    (currentFilter === 2 && subscriber.balance < 0)
+  );
+}
+
 const newSubscriberTempId = 0;
 const newSubscriberInitBalance = 0;
 
-export { concatAndHash, makeLogger, newSubscriberTempId, newSubscriberInitBalance };
+export { concatAndHash, makeLogger, subscriberFilterFunc, newSubscriberTempId, newSubscriberInitBalance };
