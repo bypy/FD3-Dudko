@@ -14,8 +14,10 @@ import { Color, Tomato } from "./Tomato";
     .add(new Tomato("Медовая капля", 0.18, Color.Yellow))
     .add(new Tomato("Розовый слон", 0.33, Color.Pink))
     .add(new Tomato("Эльдорадо", 0.25, Color.Yellow))
-    .add(new Tomato("Турецкий сверхранний", 0.21))
+    .add(new Tomato("Турецкий сверхранний", 0.21));
 
-  console?.log(`Список продуктов на весах: ${scales.getNameList()}`);
-  console?.log(`Суммарный вес продуктов: ${scales.getSumScale()}`);
+  console?.log(
+    `Список продуктов на весах:\n${scales.getNameList().join("\n")}`
+  );
+  console?.log(`Суммарный вес продуктов: ${scales.getSumScale()} кг.`);
 })();
