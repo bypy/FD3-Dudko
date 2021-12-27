@@ -1,0 +1,15 @@
+{
+  "name": "10_ts_scales",
+  "version": "1.0.0",
+  "description": "FD3-SD-21 Typescript course",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc --outFile ./src/scales_app.js"
+  },
+  "keywords": [],
+  "author": "A_Dudko",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
+}
