@@ -9,15 +9,13 @@ export enum Color {
 }
 
 export class Tomato implements IScalable {
-  private readonly name: string;
 
-  constructor(_name: string, private scale: number, private readonly _color?: Color) {
-    this.name = `томат ${_name}`;
+  constructor(private name: string, private scale: number, private _color?: Color) {
     this._color = _color || Color.Red;
   }
 
   getName(): string {
-    return this.name;
+    return `томат ${this.name}`;
   }
 
   getScale(): number {

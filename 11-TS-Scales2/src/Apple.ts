@@ -1,18 +1,14 @@
 import IScalable from "./IScalable";
 
 export class Apple implements IScalable {
-  private readonly name;
-
   constructor(
-    _name: string,
+    private name: string,
     private scale: number,
     private _isSweetKind: boolean
-  ) {
-    this.name = `яблоко ${_name}`;
-  }
+  ) {}
 
   getName(): string {
-    return this.name;
+    return `яблоко ${this.name}`;
   }
 
   getScale(): number {
