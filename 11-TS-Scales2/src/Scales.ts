@@ -1,9 +1,9 @@
 import IScalable from "./IScalable";
 
-export default class Scales<t extends IScalable> {
-  constructor(private products: Array<t> = []) {}
+export default class Scales {
+  constructor(private products: Array<IScalable> = []) {}
 
-  add(product: t): Scales<t> {
+  add(product: IScalable): Scales {
     this.products.push(product);
     return this;
   }
