@@ -17,9 +17,6 @@ export default class Scales {
   }
 
   getSumScale(): number {
-    let productsScaleList: Array<number> = this.products.map((p) =>
-      p.getScale()
-    );
-    return productsScaleList.reduce((previous, current) => previous + current);
+    return this.products.reduce((previous, current) => previous + current.getScale(), 0);
   }
 }
