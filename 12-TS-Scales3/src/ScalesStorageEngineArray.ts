@@ -10,7 +10,7 @@ export default class ScalesStorageEngineArray implements IStorageEngine {
 
   addItem(item: Product): number {
     let addIndex: number = this.getCount();
-    this.storage[addIndex] = item;
+    this.storage.push(item);
     return addIndex;
   }
 

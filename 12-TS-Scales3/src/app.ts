@@ -4,8 +4,10 @@ import ScalesStorageEngineLocalStorage from "./ScalesStorageEngineLocalStorage";
 import ScalesStorageEngineArray from "./ScalesStorageEngineArray";
 
 (() => {
-  let localStorageScales = new Scales(new ScalesStorageEngineLocalStorage(), true);
-  let inMemoryArrayScales = new Scales(new ScalesStorageEngineArray(), true);
+  let localStorageScales = new Scales(
+    new ScalesStorageEngineLocalStorage(window.localStorage, "Products")
+  );
+  let inMemoryArrayScales = new Scales(new ScalesStorageEngineArray());
 
   localStorageScales
     .add(new Product("Яблоко Медуница", 0.12))
