@@ -1,0 +1,14 @@
+{
+  "name": "10_ts_scales",
+  "version": "1.0.0",
+  "description": "FD3-SD-21 Typescript course",
+  "scripts": {
+    "start": "tsc"
+  },
+  "keywords": [],
+  "author": "A_Dudko",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
+}
